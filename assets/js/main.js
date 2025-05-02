@@ -47,7 +47,7 @@ function getBingImages(imgUrls) {
 
 function decryptEmail(encoded) {
 	var address = atob(encoded);
-	window.location.href = "mailto:" + address;
+	window.location.href = `mailto:${decodedEmail}`;
 }
 
 document.addEventListener('DOMContentLoaded', function () {

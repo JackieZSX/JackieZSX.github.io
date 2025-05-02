@@ -1,0 +1,18 @@
+{
+  "name": "Jackie-page",
+  "version": "1.0.5",
+  "description": "Jackie Page",
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JackieZSX/zhou.github.io.git"
+  },
+  "keywords": [
+    "Jackie",
+    "HomePage"
+  ],
+  "author": "Jackie",
+  "license": "MIT"
+  
+}

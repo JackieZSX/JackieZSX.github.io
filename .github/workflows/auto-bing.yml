@@ -5,9 +5,10 @@ on:
   schedule:
     - cron: "0 1 * * *"
   push:
-    branches: [ main ]
+      branches: [ gh-pages ]
   pull_request:
-    branches: [ main ]
+      branches: [ gh-pages ]
+  
 jobs:
   build:
     runs-on: ubuntu-latest

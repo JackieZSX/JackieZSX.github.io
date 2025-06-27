@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>长征系列火箭 - 中国航天的钢铁脊梁</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/longmarch.css">
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <div class="back-btn" id="backButton">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+    
+    <!-- 星空背景 -->
+    <div class="stars-bg" id="stars"></div>
+    
+    <div class="container">
+        <!-- 头部区域 -->
+        <header>
+            <div class="rocket-animation">
+                <div class="rocket">
+                    <div class="rocket-body"></div>
+                    <div class="rocket-fin"></div>
+                    <div class="rocket-flame"></div>
+                </div>
+            </div>
+            <h1>长征系列火箭</h1>
+            <p class="subtitle">
+                <span class="china-flag"></span> 中国航天的钢铁脊梁 · 探索宇宙的可靠天梯 <span class="china-flag"></span>
+            </p>
+        </header>
+        
+        <!-- 概述部分 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-fire"></i> 火箭家族概述</h2>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <p>长征系列火箭是中国自行研制的航天运载工具，自1970年4月24日长征一号成功发射中国第一颗人造卫星"东方红一号"以来，已成为中国航天事业的象征和支柱。长征火箭以可靠性高、适应性强、性价比优越著称，截至2023年底已完成超过500次发射任务。</p>
+                    
+                    <p>长征火箭家族包括四大系列：</p>
+                    
+                    <ul style="padding-left: 30px; margin-bottom: 25px;">
+                        <li><strong>长征二号系列</strong>：中国最早成熟的运载火箭，主要用于发射近地轨道航天器</li>
+                        <li><strong>长征三号系列</strong>：中国主力火箭，具备发射地球同步轨道卫星能力</li>
+                        <li><strong>长征四号系列</strong>：主要用于发射太阳同步轨道卫星</li>
+                        <li><strong>长征五号系列</strong>：中国新一代重型运载火箭，承担探月、探火等深空探测任务</li>
+                    </ul>
+                    
+                    <p>长征系列火箭的成功研制和使用，使中国成为世界上少数几个具备独立开展航天活动能力的国家，为载人航天、月球探测、北斗导航等重大工程提供了坚实保障。</p>
+                </div>
+                <div class="intro-image">
+                    <img src="../imgs/lognmarch.png" alt="长征系列火箭">
+                </div>
+            </div>
+        </section>
+        
+        <!-- 发展历程 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-history"></i> 里程碑事件</h2>
+            <div class="timeline">
+                <!-- 长征一号 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">1970年</div>
+                    <div class="timeline-content">
+                        <h3 class="rocket-model"><i class="fas fa-rocket"></i> 长征一号</h3>
+                        <p>中国第一枚运载火箭，成功发射中国首颗人造卫星"东方红一号"，标志着中国成为世界上第五个独立发射卫星的国家。</p>
+                        <div class="rocket-stats">
+                            <div class="rocket-stat">
+                                <div class="stat-label">运载能力</div>
+                                <div class="stat-value">300kg (LEO)</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">高度</div>
+                                <div class="stat-value">29.86m</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">发射次数</div>
+                                <div class="stat-value">2次</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 长征二号F -->
+                <div class="timeline-item">
+                    <div class="timeline-year">1999年</div>
+                    <div class="timeline-content">
+                        <h3 class="rocket-model"><i class="fas fa-user-astronaut"></i> 长征二号F</h3>
+                        <p>中国首款载人运载火箭，成功发射神舟系列载人飞船，将杨利伟等14位航天员送入太空，实现中华民族千年飞天梦想。</p>
+                        <div class="rocket-stats">
+                            <div class="rocket-stat">
+                                <div class="stat-label">运载能力</div>
+                                <div class="stat-value">8.4t (LEO)</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">高度</div>
+                                <div class="stat-value">58.34m</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">成功率</div>
+                                <div class="stat-value">100%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 长征五号 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2016年</div>
+                    <div class="timeline-content">
+                        <h3 class="rocket-model"><i class="fas fa-moon"></i> 长征五号</h3>
+                        <p>中国新一代大型运载火箭，近地轨道运载能力25吨，地球同步转移轨道运载能力14吨，承担探月工程三期、火星探测等重大任务。</p>
+                        <div class="rocket-stats">
+                            <div class="rocket-stat">
+                                <div class="stat-label">运载能力</div>
+                                <div class="stat-value">25t (LEO)</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">高度</div>
+                                <div class="stat-value">57m</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">直径</div>
+                                <div class="stat-value">5m</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 长征八号 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2020年</div>
+                    <div class="timeline-content">
+                        <h3 class="rocket-model"><i class="fas fa-recycle"></i> 长征八号</h3>
+                        <p>中国首款实现火箭回收技术的运载火箭，采用模块化设计，填补了中国太阳同步轨道3-5吨运载能力的空白。</p>
+                        <div class="rocket-stats">
+                            <div class="rocket-stat">
+                                <div class="stat-label">运载能力</div>
+                                <div class="stat-value">5t (SSO)</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">特点</div>
+                                <div class="stat-value">可回收</div>
+                            </div>
+                            <div class="rocket-stat">
+                                <div class="stat-label">发射成本</div>
+                                <div class="stat-value">降低50%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 主要型号 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-space-shuttle"></i> 主要火箭型号</h2>
+            <div class="rocket-family">
+                <div class="rocket-card">
+                    <h3 class="rocket-name">长征二号F</h3>
+                    <div class="rocket-image">
+                        <img src="../imgs/longmarch2F.png" alt="长征二号F">
+                    </div>
+                    <div class="rocket-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">运载能力</div>
+                            <div class="spec-value">8.4t (LEO)</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">高度</div>
+                            <div class="spec-value">58.34m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">直径</div>
+                            <div class="spec-value">3.35m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">发射次数</div>
+                            <div class="spec-value">20次</div>
+                        </div>
+                    </div>
+                    <ul class="rocket-achievements">
+                        <li><i class="fas fa-check"></i> 中国唯一的载人运载火箭</li>
+                        <li><i class="fas fa-check"></i> 成功发射所有神舟载人飞船</li>
+                        <li><i class="fas fa-check"></i> 成功率100%的可靠记录</li>
+                    </ul>
+                </div>
+                
+                <div class="rocket-card">
+                    <h3 class="rocket-name">长征五号</h3>
+                    <div class="rocket-image">
+                        <img src="../imgs/longmarch5.png" alt="长征五号">
+                    </div>
+                    <div class="rocket-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">运载能力</div>
+                            <div class="spec-value">25t (LEO)</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">高度</div>
+                            <div class="spec-value">57m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">直径</div>
+                            <div class="spec-value">5m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">发射次数</div>
+                            <div class="spec-value">12次</div>
+                        </div>
+                    </div>
+                    <ul class="rocket-achievements">
+                        <li><i class="fas fa-check"></i> 中国目前最大运载能力火箭</li>
+                        <li><i class="fas fa-check"></i> 执行嫦娥五号月球采样返回任务</li>
+                        <li><i class="fas fa-check"></i> 发射天问一号火星探测器</li>
+                    </ul>
+                </div>
+                
+                <div class="rocket-card">
+                    <h3 class="rocket-name">长征八号</h3>
+                    <div class="rocket-image">
+                        <img src="../imgs/longmarch8.png" alt="长征八号">
+                    </div>
+                    <div class="rocket-specs">
+                        <div class="spec-item">
+                            <div class="spec-label">运载能力</div>
+                            <div class="spec-value">5t (SSO)</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">高度</div>
+                            <div class="spec-value">50.3m</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">特点</div>
+                            <div class="spec-value">可回收</div>
+                        </div>
+                        <div class="spec-item">
+                            <div class="spec-label">发射次数</div>
+                            <div class="spec-value">5次</div>
+                        </div>
+                    </div>
+                    <ul class="rocket-achievements">
+                        <li><i class="fas fa-check"></i> 中国首款实现回收的火箭</li>
+                        <li><i class="fas fa-check"></i> 填补太阳同步轨道运载空白</li>
+                        <li><i class="fas fa-check"></i> 商业化发射的主力火箭</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 成就数据 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-trophy"></i> 辉煌成就</h2>
+            <div class="achievements">
+                <div class="achievement-card">
+                    <div class="achievement-value">500+</div>
+                    <div class="achievement-label">累计发射次数</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-value">96.7%</div>
+                    <div class="achievement-label">发射成功率</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-value">700+</div>
+                    <div class="achievement-label">送入太空的航天器</div>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-value">14</div>
+                    <div class="achievement-label">载人航天飞行任务</div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 未来展望 -->
+        <section class="future-section">
+            <h2 class="future-title">未来发展规划</h2>
+            <div class="future-plans">
+                <div class="plan-card">
+                    <h3 class="plan-title"><i class="fas fa-recycle"></i> 可重复使用火箭</h3>
+                    <p class="plan-desc">长征系列火箭将全面向可重复使用方向发展，大幅降低发射成本，提高发射频率。</p>
+                    <ul class="plan-details">
+                        <li><i class="fas fa-check-circle"></i> 长征九号：超重型可回收火箭</li>
+                        <li><i class="fas fa-check-circle"></i> 长征八号R：垂直起降可回收型号</li>
+                        <li><i class="fas fa-check-circle"></i> 2030年实现完全可重复使用</li>
+                    </ul>
+                </div>
+                
+                <div class="plan-card">
+                    <h3 class="plan-title"><i class="fas fa-rocket"></i> 新一代载人火箭</h3>
+                    <p class="plan-desc">研发新一代载人运载火箭，满足空间站建设、月球基地建设等任务需求。</p>
+                    <ul class="plan-details">
+                        <li><i class="fas fa-check-circle"></i> 长征十号：新一代载人火箭</li>
+                        <li><i class="fas fa-check-circle"></i> 近地轨道运载能力70吨</li>
+                        <li><i class="fas fa-check-circle"></i> 支持载人登月任务</li>
+                    </ul>
+                </div>
+                
+                <div class="plan-card">
+                    <h3 class="plan-title"><i class="fas fa-bolt"></i> 绿色环保推进剂</h3>
+                    <p class="plan-desc">全面推广液氧甲烷等环保推进剂，减少火箭发射对环境的影响。</p>
+                    <ul class="plan-details">
+                        <li><i class="fas fa-check-circle"></i> 长征六号改：液氧煤油发动机</li>
+                        <li><i class="fas fa-check-circle"></i> 朱雀二号：液氧甲烷发动机</li>
+                        <li><i class="fas fa-check-circle"></i> 2035年全面使用环保推进剂</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 页脚 -->
+        <footer>
+            <div class="footer-logo">
+                <i class="fas fa-fire"></i>
+                <i class="fas fa-rocket"></i>
+                <i class="fas fa-globe-asia"></i>
+            </div>
+            <p>中国航天科技集团有限公司 · 长征系列火箭 © 2025</p>
+            <div class="quote">
+                "长征火箭托举中国航天梦，承载着中华民族探索浩瀚宇宙的雄心壮志。"
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 400;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机位置和大小
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画参数
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                star.style.setProperty('--delay', `${Math.random() * 5}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 返回按钮功能
+        document.getElementById('backButton').addEventListener('click', function() {
+            // 添加返回动画效果
+            this.style.transform = 'translateX(-10px)';
+            this.style.opacity = '0.7';
+            
+            // 使用历史记录返回
+            setTimeout(() => {
+                window.history.back();
+            }, 300);
+        });
+        
+        // 添加卡片悬停效果
+        const cards = document.querySelectorAll('.rocket-card, .achievement-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-15px)';
+                card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.6)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.4)';
+            });
+        });
+        
+        // 添加滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section, .future-section');
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            sections.forEach(section => {
+                section.style.opacity = 0;
+                section.style.transform = 'translateY(50px)';
+                section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(section);
+            });
+            
+            timelineItems.forEach(item => {
+                item.style.opacity = 0;
+                item.style.transform = 'translateX(-30px)';
+                item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(item);
+            });
+        });
+        
+        // 页面加载时创建星空
+        window.addEventListener('load', createStars);
+    </script>
+</body>
+</html>

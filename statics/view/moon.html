@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国探月工程 - 嫦娥奔月，千年梦想</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/moon.css">
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <div class="back-btn" id="backButton">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+    
+    <!-- 星空背景 -->
+    <div class="stars-bg" id="stars"></div>
+    
+    <!-- 月球背景 -->
+    <div class="moon-bg"></div>
+    
+    <div class="container">
+        <!-- 头部区域 -->
+        <header>
+            <div class="moon-animation">
+                <div class="moon"></div>
+                <div class="change"></div>
+            </div>
+            <h1>中国探月工程</h1>
+            <p class="subtitle">
+                <span class="china-flag"></span> 嫦娥奔月 · 千年梦想 · 中国智慧 <span class="china-flag"></span>
+            </p>
+        </header>
+        
+        <!-- 概述部分 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-moon"></i> 工程概述</h2>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <p>中国探月工程（嫦娥工程）是中国国家航天局实施的月球探测计划，是继人造地球卫星、载人航天之后中国航天活动的第三个里程碑。工程于2004年正式启动，以中国古代神话人物"嫦娥"命名，象征着中华民族的奔月梦想。</p>
+                    
+                    <p>工程按照"绕、落、回"三步走战略实施：</p>
+                    
+                    <ul style="padding-left: 30px; margin-bottom: 25px;">
+                        <li><strong>第一步"绕"</strong>：发射月球轨道探测器，实现环绕月球探测（嫦娥一号、二号）</li>
+                        <li><strong>第二步"落"</strong>：发射月球软着陆器和巡视器，实现月球表面软着陆和巡视探测（嫦娥三号、四号）</li>
+                        <li><strong>第三步"回"</strong>：发射月球采样返回器，实现月球表面采样并返回地球（嫦娥五号、六号）</li>
+                    </ul>
+                    
+                    <p>截至2023年，中国探月工程已圆满完成六次发射任务，取得了一系列世界瞩目的成就，使中国成为世界上第三个实现月球软着陆和采样返回的国家。</p>
+                </div>
+                <div class="intro-image">
+                    <img src="../imgs/moon.jpg" alt="中国探月工程">
+                </div>
+            </div>
+        </section>
+        
+        <!-- 任务时间线 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-history"></i> 嫦娥任务历程</h2>
+            <div class="timeline">
+                <!-- 嫦娥一号 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2007年</div>
+                    <div class="timeline-content">
+                        <h3 class="mission-title"><i class="fas fa-satellite"></i> 嫦娥一号</h3>
+                        <p>中国首颗月球探测卫星，实现"绕"月目标。获取了120米分辨率的全月球影像图、月球表面元素含量分布等科学数据。</p>
+                        <div class="mission-details">
+                            <div class="mission-detail">
+                                <div class="detail-label">任务类型</div>
+                                <div class="detail-value">轨道探测</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">在轨时间</div>
+                                <div class="detail-value">494天</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">科学载荷</div>
+                                <div class="detail-value">8种仪器</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 嫦娥三号 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2013年</div>
+                    <div class="timeline-content">
+                        <h3 class="mission-title"><i class="fas fa-landmark"></i> 嫦娥三号</h3>
+                        <p>中国首次实现月球软着陆，着陆器携带"玉兔号"月球车。着陆在月球虹湾地区，开展月表形貌与地质构造调查等科学探测。</p>
+                        <div class="mission-details">
+                            <div class="mission-detail">
+                                <div class="detail-label">任务类型</div>
+                                <div class="detail-value">着陆巡视</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">工作时间</div>
+                                <div class="detail-value">31个月</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">巡视距离</div>
+                                <div class="detail-value">114.8米</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 嫦娥四号 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2019年</div>
+                    <div class="timeline-content">
+                        <h3 class="mission-title"><i class="fas fa-globe-americas"></i> 嫦娥四号</h3>
+                        <p>人类首个在月球背面软着陆的探测器，着陆器携带"玉兔二号"月球车。通过"鹊桥"中继卫星实现地月通信，开展低频射电天文观测等科学实验。</p>
+                        <div class="mission-details">
+                            <div class="mission-detail">
+                                <div class="detail-label">任务类型</div>
+                                <div class="detail-value">背面着陆</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">工作时间</div>
+                                <div class="detail-value">至今</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">巡视距离</div>
+                                <div class="detail-value">>1.5公里</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 嫦娥五号 -->
+                <div class="timeline-item">
+                    <div class="timeline-year">2020年</div>
+                    <div class="timeline-content">
+                        <h3 class="mission-title"><i class="fas fa-vial"></i> 嫦娥五号</h3>
+                        <p>中国首次实现地外天体采样返回任务，从月球风暴洋地区采集1731克月壤样品并成功返回地球。实现了中国航天史上首次月球轨道无人交会对接。</p>
+                        <div class="mission-details">
+                            <div class="mission-detail">
+                                <div class="detail-label">任务类型</div>
+                                <div class="detail-value">采样返回</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">采样重量</div>
+                                <div class="detail-value">1731克</div>
+                            </div>
+                            <div class="mission-detail">
+                                <div class="detail-label">任务时长</div>
+                                <div class="detail-value">23天</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 科学成就 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-medal"></i> 重大科学成就</h2>
+            <div class="achievements">
+                <div class="achievement-card">
+                    <div class="achievement-icon"><i class="fas fa-map"></i></div>
+                    <h3 class="achievement-title">全月高精度测绘</h3>
+                    <p class="achievement-desc">嫦娥一号、二号获取了7米分辨率的全月球影像图和数字高程模型，绘制了世界最清晰、最完整的月球地图，为后续探测任务提供了精确的月表地形数据。</p>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-icon"><i class="fas fa-vial"></i></div>
+                    <h3 class="achievement-title">月球样品研究</h3>
+                    <p class="achievement-desc">嫦娥五号带回的月壤样品经研究证实含有"嫦娥石"新矿物，为月球火山活动研究提供了关键证据，并发现月球在20亿年前仍有火山活动。</p>
+                </div>
+                
+                <div class="achievement-card">
+                    <div class="achievement-icon"><i class="fas fa-seedling"></i></div>
+                    <h3 class="achievement-title">月面生物实验</h3>
+                    <p class="achievement-desc">嫦娥四号搭载的月面微型生态圈实验，实现了人类首次在月球表面进行的生物生长实验，棉花种子在月球表面发芽，为未来月球基地生命保障研究奠定基础。</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 未来规划 -->
+        <section class="future-section">
+            <h2 class="future-title">未来探月规划</h2>
+            <div class="future-plans">
+                <div class="plan-card">
+                    <h3 class="plan-title"><i class="fas fa-rocket"></i> 嫦娥六号</h3>
+                    <p class="plan-desc">计划于2024年发射，将执行月球背面南极-艾特肯盆地采样返回任务，有望获取更古老的月壤样本，揭示月球早期演化历史。</p>
+                    <ul class="plan-details">
+                        <li><i class="fas fa-check-circle"></i> 首次月球背面采样返回</li>
+                        <li><i class="fas fa-check-circle"></i> 探测月球最古老区域</li>
+                        <li><i class="fas fa-check-circle"></i> 国际载荷合作项目</li>
+                    </ul>
+                </div>
+                
+                <div class="plan-card">
+                    <h3 class="plan-title"><i class="fas fa-igloo"></i> 嫦娥七号</h3>
+                    <p class="plan-desc">计划于2026年发射，将对月球南极地形地貌、物质成分、空间环境等进行综合探测，为国际月球科研站选址提供数据支持。</p>
+                    <ul class="plan-details">
+                        <li><i class="fas fa-check-circle"></i> 月球南极综合探测</li>
+                        <li><i class="fas fa-check-circle"></i> 寻找水冰资源</li>
+                        <li><i class="fas fa-check-circle"></i> 永久阴影区探测</li>
+                    </ul>
+                </div>
+                
+                <div class="plan-card">
+                    <h3 class="plan-title"><i class="fas fa-space-shuttle"></i> 嫦娥八号</h3>
+                    <p class="plan-desc">计划于2028年发射，将验证月球科研站关键技术，包括月面3D打印建造、月面资源原位利用等，为国际月球科研站建设奠定基础。</p>
+                    <ul class="plan-details">
+                        <li><i class="fas fa-check-circle"></i> 月面建造技术验证</li>
+                        <li><i class="fas fa-check-circle"></i> 资源原位利用实验</li>
+                        <li><i class="fas fa-check-circle"></i> 月面通信导航验证</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 页脚 -->
+        <footer>
+            <div class="footer-logo">
+                <i class="fas fa-rocket"></i>
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-globe-asia"></i>
+            </div>
+            <p>中国国家航天局 · 中国探月与航天工程中心 © 2025</p>
+            <div class="quote">
+                "可上九天揽月，可下五洋捉鳖，谈笑凯歌还。世上无难事，只要肯登攀。"
+                <div style="text-align: right; margin-top: 10px;">—— 毛泽东《水调歌头·重上井冈山》</div>
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 400;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机位置和大小
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画参数
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                star.style.setProperty('--delay', `${Math.random() * 5}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 返回按钮功能
+        document.getElementById('backButton').addEventListener('click', function() {
+            // 添加返回动画效果
+            this.style.transform = 'translateX(-10px)';
+            this.style.opacity = '0.7';
+            
+            // 使用历史记录返回
+            setTimeout(() => {
+                window.history.back();
+            }, 300);
+        });
+        
+        // 添加卡片悬停效果
+        const cards = document.querySelectorAll('.achievement-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-15px)';
+                card.style.boxShadow = '0 20px 40px rgba(0, 0, 0, 0.6)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.4)';
+            });
+        });
+        
+        // 添加滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section, .future-section');
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            sections.forEach(section => {
+                section.style.opacity = 0;
+                section.style.transform = 'translateY(50px)';
+                section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(section);
+            });
+            
+            timelineItems.forEach(item => {
+                item.style.opacity = 0;
+                item.style.transform = 'translateX(-30px)';
+                item.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(item);
+            });
+        });
+        
+        // 页面加载时创建星空
+        window.addEventListener('load', createStars);
+    </script>
+</body>
+</html>

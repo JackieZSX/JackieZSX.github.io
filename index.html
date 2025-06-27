@@ -1,109 +1,192 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Jackie Home">
-    <meta name="keywords" content="Jackie,Homepage">
-    <meta name="author" content="Jackie">
-    <title>Jackie Home</title>
-    <link rel="stylesheet" type="text/css" href="./assets/css/onlinewebfonts.css"/>
-    <link rel="stylesheet" type="text/css" href="./assets/css/vno.css">
-    <link rel="stylesheet" type="text/css" href="./assets/css/iconfont.css">
-    <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-    <link rel="icon" href="./favicon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神舟六号飞船 - 中国航天里程碑</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="./statics/css/main.css">
 </head>
-
 <body>
-    <span class="mobile btn-mobile-menu">
-        <i class="social iconfont icon-list btn-mobile-menu__icon"></i>
-        <i class="social iconfont icon-angleup btn-mobile-close__icon hidden"></i>
-    </span>
-    <header id="panel" class="panel-cover">
-        <div class="panel-main">
-            <div class="panel-main__inner panel-inverted">
-                <div class="panel-main__content">
-                    <div class="ih-item circle effect right_to_left">            
-                        <a href="#" title="" class="blog-button">
-                            <div class="img"><img src="./assets/img/logo.png" alt="img" class="js-avatar iUp profilepic"></div>
-                            <div class="info iUp">
-                                <div class="info-back">
-                                    <h2> 
-                                        
-                                            Jackie
-                                        
-                                    </h2>
-                                    <p>
-                                        
-                                            2025 · 与众不同
-                                        
-                                    </p>
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    <h1 class="panel-cover__title panel-title iUp">
-                        <a href="#" title="Jackie Home">Jackie</a>
-                    </h1>
-                    <p class="panel-cover__subtitle panel-subtitle iUp">Code Create Life</p>
-                    <hr class="panel-cover__divider iUp" />
-                    <p id="description" class="panel-cover__description iUp">追逐影子的人，自己就是影子。
-                        <br/>
-                        <strong>-「黑塞《德米安》」</strong>
-                    </p>
-                    <div class="navigation-wrapper iUp">
-                        <div>
-                            <nav class="cover-navigation cover-navigation--primary">
-                                <ul class="navigation">
-                                    <li class="navigation__item">
-                                        <a href="/" class="blog-button">首页</a>
-                                    </li>
-                                    <!-- <li class="navigation__item">
-                                        <a href="https://Jackie.cn" class="blog-button" target="_blank">博客</a>
-                                    </li> -->
-                                    <li class="navigation__item">
-                                        <a href="./module/Jackie.html" class="blog-button" target="_blank">简历</a>
-                                    </li>
-                                    <li class="navigation__item">
-                                        <!-- <a href="./module/about.html" class="blog-button" target="_blank">关于</a> -->
-                                        <a href="https://docs.github.com/zh/get-started" class="blog-button" target="_blank">关于</a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                        <div class="iUp">
-                            <nav class="cover-navigation navigation--social">
-                                <ul class="navigation">
-                                    <li class="navigation__item">
-                                        <a href="https://github.com/JackieZSX/" title="github" target="_blank">
-                                            <i class='social iconfont icon-github'></i>
-                                            <span class="label">github</span>
-                                        </a>
-                                    </li>
-                                    <li class="navigation__item">
-                                        <a href="#" onclick="decryptEmail('emhvdXNodWFpMjAyNTMxQDE2My5jb20='); return false;" title="email">
-                                            <i class='social iconfont icon-email'></i>
-                                            <span class="label">email</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="panel-cover--overlay cover-slate"></div>
+    <canvas id="space-canvas"></canvas>
+    
+    <div class="container" id="main-container">
+        <h1 class="main-title">神舟六号飞船</h1>
+        <div class="hint">点击屏幕任意位置发射飞船<br>探索中国航天里程碑</div>
+        <div class="countdown" id="countdown">5</div>
+        <div class="spaceship-container">
+            <div id="spaceship"></div>
+            <div class="pulse"></div>
         </div>
-        <div class="remark iUp">
-            <p class="power">Powered By 
-                <a href="https://github.com/features/actions" target="_blank"> GitHub Actions </a> And 
-                <a href="https://hitokoto.cn/" target="_blank"> Hitokoto </a>
-            </p>
+        
+        <div class="earth"></div>
+       
+        <audio id="Music" src="statics/audio/ship.mp3" autoplay loop preload="auto"></audio>
+        <div class="music-controls">
+            <button id="musicBtn"></button>
         </div>
-    </header>
-    <script type="text/javascript" src="./assets/js/main.js"></script>
-    <script type="text/javascript" src="./assets/json/images.json?cb=getBingImages"></script>
+
+    </div>
+
+    
+    <script>
+        // 获取DOM元素
+        const canvas = document.getElementById('space-canvas');
+        const ctx = canvas.getContext('2d');
+        const spaceship = document.getElementById('spaceship');
+        const mainContainer = document.getElementById('main-container');
+        const countdown = document.getElementById('countdown');
+        const musicBtn = document.getElementById('musicBtn');
+        const audio = document.getElementById('Music');
+        audio.play();
+        // 设置Canvas尺寸
+        function setCanvasSize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        // 星星数组
+        const stars = [];
+        const starCount = 300;
+
+        // 创建星星
+        function createStars() {
+            for (let i = 0; i < starCount; i++) {
+                stars.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    size: Math.random() * 2 + 0.5,
+                    speed: Math.random() * 0.5 + 0.1,
+                    opacity: Math.random() * 0.5 + 0.5
+                });
+            }
+        }
+
+        // 绘制星空
+        function drawStars() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制星空背景
+            const gradient = ctx.createRadialGradient(
+                canvas.width / 2, canvas.height / 2, 0,
+                canvas.width / 2, canvas.height / 2, Math.max(canvas.width, canvas.height) / 2
+            );
+            gradient.addColorStop(0, 'rgba(10, 10, 40, 0.8)');
+            gradient.addColorStop(1, 'rgba(5, 5, 20, 1)');
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制星星
+            stars.forEach(star => {
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+                ctx.fill();
+
+                // 移动星星
+                star.y += star.speed;
+
+                // 如果星星移出屏幕，重置到顶部
+                if (star.y > canvas.height) {
+                    star.y = 0;
+                    star.x = Math.random() * canvas.width;
+                }
+            });
+
+            requestAnimationFrame(drawStars);
+        }
+
+        // 飞船跟随鼠标
+        document.addEventListener('mousemove', (e) => {
+            spaceship.style.transform = `translate(-50%, -50%) translate(${e.clientX - window.innerWidth/2}px, ${e.clientY - window.innerHeight/2}px)`;
+        });
+
+        // 发射飞船
+        function launchSpaceship() {
+            // 显示倒计时
+            let counter = 5;
+            countdown.style.display = 'block';
+            mainContainer.style.pointerEvents = 'none'; // 禁止点击
+            const countdownInterval = setInterval(() => {
+                countdown.textContent = counter;
+                counter--;
+                
+                if (counter <= 0) {
+                    clearInterval(countdownInterval);
+                    
+                    // 添加发射动画
+                    spaceship.style.transition = 'all 3s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                    spaceship.style.transform = 'translate(-50%, -50%) translateY(-100vh) scale(0.3)';
+                    spaceship.style.opacity = '0.5';
+                    
+                    // 创建发射轨迹
+                    createLaunchTrail();
+        
+                    // 显示信息面板
+                    setTimeout(() => {
+                         window.location.href = "statics/view/introduce.html"; 
+                    }, 3000);
+                }
+            }, 1000);
+        }
+
+        // 创建发射轨迹
+        function createLaunchTrail() {
+            const trailCount = 20;
+            
+            for (let i = 0; i < trailCount; i++) {
+                setTimeout(() => {
+                    const trail = document.createElement('div');
+                    trail.classList.add('trail');
+                    
+                    // 设置轨迹位置
+                    const rect = spaceship.getBoundingClientRect();
+                    const x = rect.left + rect.width/2;
+                    const y = rect.top + rect.height;
+                    
+                    trail.style.left = `${x}px`;
+                    trail.style.top = `${y}px`;
+                    trail.style.height = `${Math.random() * 100 + 50}px`;
+                    
+                    document.body.appendChild(trail);
+                    
+                    // 动画
+                    setTimeout(() => {
+                        trail.style.transform = `scaleY(0)`;
+                        trail.style.opacity = `0`;
+                        setTimeout(() => {
+                            trail.remove();
+                        }, 1000);
+                    }, 100);
+                }, i * 150);
+            }
+        }
+
+        // 音乐控制
+        musicBtn.addEventListener('click', () => {
+            audio.play();
+        });
+
+        
+        // 初始化
+        function init() {
+            setCanvasSize();
+            createStars();
+            drawStars();
+            spaceship.style.animation = 'float 4s ease-in-out infinite';
+            audio.play();
+            mainContainer.addEventListener('click', launchSpaceship);
+            setTimeout(() => {
+                document.querySelector('.hint').style.opacity = '0.7';
+            }, 5000);
+        }
+
+        // 窗口调整大小
+        window.addEventListener('resize', setCanvasSize);
+
+        // 初始化页面
+        window.addEventListener('load', init);
+    </script>
 </body>
 </html>

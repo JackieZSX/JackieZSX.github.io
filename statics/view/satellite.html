@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国卫星系统 - 太空科技的国家名片</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/statellite.css">
+</head>
+<body>
+    <!-- 返回按钮 -->
+    <div class="back-btn" id="backButton">
+        <i class="fas fa-arrow-left"></i>
+    </div>
+    
+    <!-- 星空背景 -->
+    <div class="stars-bg" id="stars"></div>
+    
+    <div class="container">
+        <!-- 头部区域 -->
+        <header>
+            <div class="satellite-animation">
+                <div class="earth"></div>
+                <div class="satellite"></div>
+            </div>
+            <h1>中国卫星系统</h1>
+            <p class="subtitle">
+                <span class="china-flag"></span> 太空科技的国家名片 · 服务全球的航天力量 <span class="china-flag"></span>
+            </p>
+        </header>
+        
+        <!-- 概述部分 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-satellite"></i> 中国卫星系统概述</h2>
+            <div class="intro-content">
+                <div class="intro-text">
+                    <p>中国卫星系统经过数十年发展，已形成完整的卫星研发、制造、发射和应用体系。从1970年发射第一颗人造卫星"东方红一号"开始，中国航天人自力更生、艰苦奋斗，建立了包括北斗导航、高分观测、风云气象、实践科学、通信广播等在内的卫星系统体系。</p>
+                    
+                    <p>中国卫星系统坚持自主创新，实现了从技术跟跑到并跑、领跑的跨越式发展。目前，中国在轨卫星数量超过400颗，位居世界第二，卫星应用已深入国民经济、国家安全和人民生活各个领域。</p>
+                    
+                    <p>中国卫星系统秉持"服务全球、造福人类"的理念，北斗卫星导航系统已向全球提供服务，风云气象卫星数据服务全球100多个国家和地区，为构建人类命运共同体贡献中国智慧和中国方案。</p>
+                </div>
+                <div class="intro-image">
+                    <img src="../imgs/satellite.jpg" alt="中国卫星系统">
+                </div>
+            </div>
+        </section>
+        
+        <!-- 发展历程 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-history"></i> 中国卫星发展里程碑</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-year">1970年</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">东方红一号</h3>
+                        <p>中国成功发射第一颗人造地球卫星"东方红一号"，成为世界上第五个独立研制并发射卫星的国家。卫星重173公斤，播放《东方红》乐曲，标志着中国航天时代的开启。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2000年</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">北斗一号建成</h3>
+                        <p>中国建成北斗导航试验系统（北斗一号），成为继美国、俄罗斯之后第三个拥有自主卫星导航系统的国家，服务中国及周边地区。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2012年</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">北斗区域系统</h3>
+                        <p>北斗卫星导航系统正式提供区域服务，覆盖亚太地区，定位精度优于10米，测速精度优于0.2米/秒，授时精度优于50纳秒。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2020年</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">北斗全球系统</h3>
+                        <p>北斗三号全球卫星导航系统正式开通，在全球范围内提供定位导航授时服务。系统由35颗卫星组成，定位精度达到分米级、厘米级。</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-year">2023年</div>
+                    <div class="timeline-content">
+                        <h3 class="timeline-title">遥感卫星星座</h3>
+                        <p>建成世界规模最大的遥感卫星星座"吉林一号"，拥有138颗在轨卫星，具备全球任意地点10分钟内重访能力，广泛应用于国土资源监测、智慧城市建设等领域。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 主要卫星系统 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-globe-asia"></i> 中国主要卫星系统</h2>
+            <div class="satellite-systems">
+                <!-- 北斗系统 -->
+                <div class="system-card">
+                    <div class="system-icon"><i class="fas fa-location-arrow"></i></div>
+                    <h3 class="system-title">北斗导航系统</h3>
+                    <p class="system-desc">中国自主研发的全球卫星导航系统，由35颗卫星组成，具备定位、导航、授时和短报文通信四大功能。</p>
+                    <ul class="system-features">
+                        <li><i class="fas fa-check"></i> 全球定位精度：水平3.6米，高程6.6米</li>
+                        <li><i class="fas fa-check"></i> 亚太地区精度：水平2.5米，高程5.0米</li>
+                        <li><i class="fas fa-check"></i> 特色功能：全球短报文通信服务</li>
+                        <li><i class="fas fa-check"></i> 应用：交通运输、农业、测绘、防灾减灾</li>
+                    </ul>
+                </div>
+                
+                <!-- 高分系统 -->
+                <div class="system-card">
+                    <div class="system-icon"><i class="fas fa-satellite-dish"></i></div>
+                    <h3 class="system-title">高分辨率对地观测系统</h3>
+                    <p class="system-desc">中国最先进的地球观测卫星系统，包含光学、雷达、高光谱等多种观测手段。</p>
+                    <ul class="system-features">
+                        <li><i class="fas fa-check"></i> 高分系列卫星：全色分辨率达0.5米</li>
+                        <li><i class="fas fa-check"></i> 多光谱分辨率：2米</li>
+                        <li><i class="fas fa-check"></i> 雷达卫星：全天时、全天候观测</li>
+                        <li><i class="fas fa-check"></i> 应用：国土普查、环境监测、灾害预警</li>
+                    </ul>
+                </div>
+                
+                <!-- 风云系统 -->
+                <div class="system-card">
+                    <div class="system-icon"><i class="fas fa-cloud-sun"></i></div>
+                    <h3 class="system-title">风云气象卫星系统</h3>
+                    <p class="system-desc">全球对地观测卫星的重要成员，包含极轨和静止轨道两大系列气象卫星。</p>
+                    <ul class="system-features">
+                        <li><i class="fas fa-check"></i> 风云四号：地球静止轨道气象卫星</li>
+                        <li><i class="fas fa-check"></i> 风云三号：极轨气象卫星</li>
+                        <li><i class="fas fa-check"></i> 观测精度：温度0.5K，湿度10%</li>
+                        <li><i class="fas fa-check"></i> 应用：天气预报、气候监测、灾害预警</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 应用领域 -->
+        <section class="section">
+            <h2 class="section-title"><i class="fas fa-cogs"></i> 卫星系统应用领域</h2>
+            <div class="applications">
+                <div class="app-card">
+                    <div class="app-icon"><i class="fas fa-car"></i></div>
+                    <h3 class="app-title">智能交通</h3>
+                    <p class="app-desc">北斗系统为车辆提供厘米级定位，支持自动驾驶、智能交通管理、电子收费等应用。</p>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon"><i class="fas fa-tractor"></i></div>
+                    <h3 class="app-title">智慧农业</h3>
+                    <p class="app-desc">卫星遥感监测作物生长，无人机精准施肥，北斗导航实现农机自动驾驶。</p>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon"><i class="fas fa-bolt"></i></div>
+                    <h3 class="app-title">灾害预警</h3>
+                    <p class="app-desc">高分卫星实时监测地质灾害，风云卫星预测台风路径，减少自然灾害损失。</p>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon"><i class="fas fa-mountain"></i></div>
+                    <h3 class="app-title">资源勘探</h3>
+                    <p class="app-desc">卫星遥感探明矿产资源分布，监测森林覆盖变化，评估水资源状况。</p>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon"><i class="fas fa-wifi"></i></div>
+                    <h3 class="app-title">通信服务</h3>
+                    <p class="app-desc">天通卫星电话实现全球无死角通信，保障应急救援和远洋航行通信需求。</p>
+                </div>
+                
+                <div class="app-card">
+                    <div class="app-icon"><i class="fas fa-drafting-compass"></i></div>
+                    <h3 class="app-title">国土测绘</h3>
+                    <p class="app-desc">高分卫星提供高精度地理信息数据，支持国土规划、城市建设与地图更新。</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 未来展望 -->
+        <section class="future-section">
+            <h2 class="future-title">中国卫星系统未来规划</h2>
+            <div class="future-content">
+                <p><strong>下一代北斗系统</strong>：2035年前建成以北斗系统为核心的综合定位导航授时体系，定位精度达到厘米级，深度融入5G/6G通信、人工智能、物联网等新兴技术。</p>
+                
+                <p><strong>超高清地球观测</strong>：发展新一代高分辨率光学卫星和雷达卫星，分辨率将提高到0.1米，实现全球任意地点分钟级重访能力。</p>
+                
+                <p><strong>量子卫星网络</strong>：扩大"墨子号"量子科学实验卫星成果，构建全球量子通信网络，实现无条件安全通信。</p>
+                
+                <p><strong>低轨互联网星座</strong>：建设"鸿雁"、"虹云"等低轨通信星座，由数千颗卫星组成，提供全球无缝覆盖的高速互联网接入服务。</p>
+                
+                <p><strong>深空探测卫星</strong>：发展小行星探测、太阳系边际探测等深空卫星，推动"嫦娥"探月工程和火星探测计划向纵深发展。</p>
+            </div>
+        </section>
+        
+        <!-- 页脚 -->
+        <footer>
+            <div class="footer-logo">
+                <i class="fas fa-rocket"></i>
+                <i class="fas fa-satellite"></i>
+                <i class="fas fa-globe-asia"></i>
+            </div>
+            <p>中国国家航天局 · 中国卫星系统 © 2025</p>
+            <p class="footer-text">探索浩瀚宇宙，发展航天事业，建设航天强国，是我们不懈追求的航天梦</p>
+        </footer>
+    </div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 300;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机位置和大小
+                const size = Math.random() * 3;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画参数
+                star.style.setProperty('--duration', `${Math.random() * 5 + 3}s`);
+                star.style.setProperty('--delay', `${Math.random() * 5}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 返回按钮功能
+        document.getElementById('backButton').addEventListener('click', function() {
+            // 添加返回动画效果
+            this.style.transform = 'translateX(-10px)';
+            this.style.opacity = '0.7';
+            
+            // 使用历史记录返回
+            setTimeout(() => {
+                window.history.back();
+            }, 300);
+        });
+        
+        // 添加卡片悬停效果
+        const cards = document.querySelectorAll('.system-card, .app-card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-15px)';
+                card.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.5)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+                card.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.3)';
+            });
+        });
+        
+        // 添加滚动动画效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section, .future-section');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = 1;
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            
+            sections.forEach(section => {
+                section.style.opacity = 0;
+                section.style.transform = 'translateY(50px)';
+                section.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                observer.observe(section);
+            });
+        });
+        
+        // 页面加载时创建星空
+        window.addEventListener('load', createStars);
+    </script>
+</body>
+</html>

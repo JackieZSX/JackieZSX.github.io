@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登月飞船着陆挑战</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a, #2a2a6a);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 星空背景 */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 1;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            max-width: 800px;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            color: #4fc3f7;
+            text-shadow: 0 0 15px rgba(79, 195, 247, 0.7);
+            background: linear-gradient(to right, #4fc3f7, #2196f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+            padding: 0 10px;
+        }
+        
+        .instructions {
+            background: rgba(20, 30, 70, 0.5);
+            border-radius: 15px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .instructions h2 {
+            color: #81d4fa;
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .instructions ul {
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .instructions li {
+            margin-bottom: 0.3rem;
+            line-height: 1.4;
+        }
+        
+        /* 游戏区域 */
+        .game-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background: rgba(10, 15, 30, 0.8);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.3);
+            border: 2px solid rgba(100, 150, 255, 0.3);
+            margin-bottom: 1.5rem;
+        }
+        
+        #game-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 游戏内仪表盘 */
+        .in-game-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(20, 30, 70, 0.7);
+            padding: 1rem;
+            border-radius: 15px;
+            width: 200px;
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+        
+        .panel-title {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: #81d4fa;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        
+        .panel-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4fc3f7;
+            text-align: center;
+            margin-bottom: 0.3rem;
+        }
+        
+        .fuel-bar-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(30, 40, 80, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 150, 255, 0.2);
+            margin-bottom: 0.5rem;
+        }
+        
+        .fuel-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2ecc71, #27ae60);
+            border-radius: 6px;
+            width: 100%;
+            transition: width 0.3s ease;
+        }
+        
+        .velocity-bar-container {
+            width: 100%;
+            height: 12px;
+            background: rgba(30, 40, 80, 0.5);
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 150, 255, 0.2);
+        }
+        
+        .velocity-bar {
+            height: 100%;
+            border-radius: 6px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* 引擎控制 */
+        .engine-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .thrust-control {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+        }
+        
+        #thrust-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 400px;
+            justify-content: center;
+        }
+        
+        #thrust-btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.4);
+            background: linear-gradient(135deg, #c0392b, #a93226);
+        }
+        
+        .thrust-indicator {
+            width: 100%;
+            max-width: 400px;
+            height: 15px;
+            background: rgba(30, 40, 80, 0.5);
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .thrust-level {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12);
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.1s ease;
+        }
+        
+        .thrust-value {
+            font-size: 1.1rem;
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        /* 游戏控制按钮 */
+        .game-controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 0.5rem;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .game-btn {
+            background: linear-gradient(135deg, #2196f3, #21cbf3);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            min-width: 160px;
+        }
+        
+        .game-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.6);
+        }
+        
+        /* 结果界面 */
+        .result-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        
+        .result-screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .result-content {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            transform: scale(0.8);
+            transition: transform 0.8s ease;
+            box-shadow: 0 0 40px rgba(79, 195, 247, 0.5);
+        }
+        
+        .result-screen.active .result-content {
+            transform: scale(1);
+        }
+        
+        .result-icon {
+            font-size: 4rem;
+            margin-bottom: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .success .result-icon {
+            color: #2ecc71;
+        }
+        
+        .failure .result-icon {
+            color: #e74c3c;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .result-title {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .success .result-title {
+            color: #2ecc71;
+        }
+        
+        .failure .result-title {
+            color: #e74c3c;
+        }
+        
+        .result-message {
+            font-size: 1.1rem;
+            margin-bottom: 1.8rem;
+            line-height: 1.6;
+        }
+        
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin-bottom: 1.8rem;
+        }
+        
+        .stat-item {
+            background: rgba(30, 40, 80, 0.5);
+            padding: 0.8rem;
+            border-radius: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #81d4fa;
+            margin-bottom: 0.3rem;
+        }
+        
+        .stat-value {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 850px) {
+            .game-container {
+                width: 95vw;
+                height: 400px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .in-game-panel {
+                width: 180px;
+                padding: 0.8rem;
+                top: 15px;
+                left: 15px;
+            }
+            
+            .panel-title {
+                font-size: 0.9rem;
+            }
+            
+            .panel-value {
+                font-size: 1.3rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.9rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .game-container {
+                height: 350px;
+            }
+            
+            .in-game-panel {
+                width: 160px;
+                top: 10px;
+                left: 10px;
+            }
+            
+            .panel-value {
+                font-size: 1.2rem;
+            }
+            
+            #thrust-btn {
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+            }
+            
+            .game-btn {
+                min-width: 140px;
+                padding: 0.7rem 1.5rem;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .game-container {
+                height: 300px;
+            }
+            
+            .in-game-panel {
+                width: 140px;
+                padding: 0.6rem;
+            }
+            
+            .panel-title {
+                font-size: 0.8rem;
+            }
+            
+            .panel-value {
+                font-size: 1.1rem;
+            }
+            
+            .game-controls {
+                gap: 1rem;
+            }
+            
+            .game-btn {
+                min-width: 130px;
+                padding: 0.6rem 1.2rem;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-rocket"></i> 登月飞船着陆挑战</h1>
+            <div class="subtitle">
+                点击喷气按钮控制飞船引擎抵消月球重力，实现安全着陆！安全速度 &lt; 5 m/s。燃料有限，请谨慎使用！
+            </div>
+        </header>
+        <div class="game-container">
+            <canvas id="game-canvas" width="800" height="500"></canvas>
+            
+            <!-- 游戏内仪表盘 -->
+            <div class="in-game-panel">
+                <div class="panel-title"><i class="fas fa-tachometer-alt"></i> 当前速度</div>
+                <div class="panel-value" id="velocity-display">0.0 m/s</div>
+                <div class="velocity-bar-container">
+                    <div class="velocity-bar" id="velocity-bar"></div>
+                </div>
+                
+                <div class="panel-title"><i class="fas fa-mountain"></i> 当前高度</div>
+                <div class="panel-value" id="altitude-display">1000 m</div>
+                
+                <div class="panel-title"><i class="fas fa-gas-pump"></i> 剩余燃料</div>
+                <div class="panel-value" id="fuel-display">100%</div>
+                <div class="fuel-bar-container">
+                    <div class="fuel-bar" id="fuel-bar"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="engine-control">
+            <div class="thrust-control">
+                <button id="thrust-btn"><i class="fas fa-fire"></i> 启动引擎 (点击喷气)</button>
+                <div class="thrust-indicator">
+                    <div class="thrust-level" id="thrust-level"></div>
+                </div>
+                <div class="thrust-value">引擎推力: <span id="thrust-value">0%</span></div>
+            </div>
+            
+            <div class="game-controls">
+                <button class="game-btn" id="start-btn"><i class="fas fa-play"></i> 开始游戏</button>
+                <button class="game-btn" id="reset-btn"><i class="fas fa-redo"></i> 重新开始</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 成功着陆界面 -->
+    <div class="result-screen success" id="success-screen">
+        <div class="result-content">
+            <div class="result-icon">
+                <i class="fas fa-flag"></i>
+            </div>
+            <h2 class="result-title">着陆成功！</h2>
+            <p class="result-message">恭喜您成功完成登月着陆任务！中国航天因您而骄傲！</p>
+            
+            <div class="result-stats">
+                <div class="stat-item">
+                    <div class="stat-label">着陆速度</div>
+                    <div class="stat-value" id="final-velocity">0.0 m/s</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">剩余燃料</div>
+                    <div class="stat-value" id="final-fuel">100%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">着陆评分</div>
+                    <div class="stat-value" id="landing-score">A+</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">用时</div>
+                    <div class="stat-value" id="landing-time">0s</div>
+                </div>
+            </div>
+            <button class="game-btn" id="learn-btn"><i class="fas fa-redo"></i> 了解登月计划</button>
+            <button class="game-btn" id="play-again-btn"><i class="fas fa-play"></i> 再玩一次</button>
+        </div>
+    </div>
+    
+    <!-- 着陆失败界面 -->
+    <div class="result-screen failure" id="failure-screen">
+        <div class="result-content">
+            <div class="result-icon">
+                <i class="fas fa-times"></i>
+            </div>
+            <h2 class="result-title">着陆失败！</h2>
+            <p class="result-message">飞船坠毁！请控制好下降速度，安全速度 &lt; 5 m/s。</p>
+            
+            <div class="result-stats">
+                <div class="stat-item">
+                    <div class="stat-label">撞击速度</div>
+                    <div class="stat-value" id="crash-velocity">0.0 m/s</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">剩余燃料</div>
+                    <div class="stat-value" id="crash-fuel">100%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">失败原因</div>
+                    <div class="stat-value" id="failure-reason">速度过快</div>
+                </div>
+            </div>
+            <button class="learn-btn" id="learn-btn"><i class="fas fa-redo"></i> 了解登月计划</button>
+            <button class="game-btn" id="retry-btn"><i class="fas fa-redo"></i> 重新尝试</button>
+        </div>
+    </div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机大小和位置
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画持续时间
+                star.style.setProperty('--duration', `${Math.random() * 5 + 2}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 游戏变量
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const velocityDisplay = document.getElementById('velocity-display');
+        const altitudeDisplay = document.getElementById('altitude-display');
+        const fuelDisplay = document.getElementById('fuel-display');
+        const fuelBar = document.getElementById('fuel-bar');
+        const velocityBar = document.getElementById('velocity-bar');
+        const thrustLevel = document.getElementById('thrust-level');
+        const thrustValue = document.getElementById('thrust-value');
+        const thrustBtn = document.getElementById('thrust-btn');
+        const startBtn = document.getElementById('start-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const successScreen = document.getElementById('success-screen');
+        const failureScreen = document.getElementById('failure-screen');
+        const learnBtn = document.getElementById('learn-btn');
+        // 游戏状态
+        let gameRunning = false;
+        let gameOver = false;
+        let thrustActive = false;
+        let thrustPower = 1; // 初始为最大推力
+        
+        // 飞船参数
+        const ship = {
+            x: canvas.width / 2,
+            y: 100,
+            width: 60,
+            height: 100,
+            velocity: 0,
+            altitude: 1000,
+            fuel: 100,
+            maxFuel: 100,
+            enginePower: 0
+        };
+        
+        // 月球参数
+        const moon = {
+            gravity: 1.62, // 月球重力加速度 (m/s²)
+            surfaceY: canvas.height - 50
+        };
+        
+        // 时间控制
+        let lastTime = 0;
+        let gameTime = 0;
+        
+        // 绘制月球表面
+        function drawMoonSurface() {
+            ctx.fillStyle = '#7e7e7e';
+            ctx.beginPath();
+            ctx.moveTo(0, moon.surfaceY);
+            
+            // 创建起伏的月球表面
+            for (let x = 0; x <= canvas.width; x += 20) {
+                const y = moon.surfaceY + Math.sin(x / 30 + gameTime / 1000) * 10;
+                ctx.lineTo(x, y);
+            }
+            
+            ctx.lineTo(canvas.width, canvas.height);
+            ctx.lineTo(0, canvas.height);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 添加陨石坑
+            ctx.fillStyle = '#5c5c5c';
+            for (let i = 0; i < 10; i++) {
+                const x = Math.random() * canvas.width;
+                const y = moon.surfaceY + Math.random() * 20;
+                const radius = Math.random() * 15 + 5;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // 添加陨石坑内部阴影
+                ctx.beginPath();
+                ctx.arc(x - radius/3, y - radius/3, radius/2, 0, Math.PI * 2);
+                ctx.fillStyle = '#4a4a4a';
+                ctx.fill();
+            }
+        }
+        
+        // 绘制飞船
+        function drawSpaceship() {
+            // 绘制引擎火焰
+            if (thrustActive && ship.fuel > 0) {
+                const flameHeight = 30 + Math.random() * 20;
+                const flameWidth = 20 + Math.random() * 10;
+                
+                ctx.fillStyle = '#ff5722';
+                ctx.beginPath();
+                ctx.moveTo(ship.x - ship.width/4, ship.y + ship.height);
+                ctx.lineTo(ship.x, ship.y + ship.height + flameHeight);
+                ctx.lineTo(ship.x + ship.width/4, ship.y + ship.height);
+                ctx.closePath();
+                ctx.fill();
+                
+                ctx.fillStyle = '#ffeb3b';
+                ctx.beginPath();
+                ctx.moveTo(ship.x - ship.width/6, ship.y + ship.height);
+                ctx.lineTo(ship.x, ship.y + ship.height + flameHeight * 0.7);
+                ctx.lineTo(ship.x + ship.width/6, ship.y + ship.height);
+                ctx.closePath();
+                ctx.fill();
+            }
+            
+            // 绘制飞船主体
+            ctx.fillStyle = '#3498db';
+            ctx.fillRect(ship.x - ship.width/2, ship.y, ship.width, ship.height);
+            
+            // 绘制飞船顶部
+            ctx.fillStyle = '#2980b9';
+            ctx.beginPath();
+            ctx.moveTo(ship.x - ship.width/2, ship.y);
+            ctx.lineTo(ship.x, ship.y - 30);
+            ctx.lineTo(ship.x + ship.width/2, ship.y);
+            ctx.closePath();
+            ctx.fill();
+            
+            // 绘制飞船舷窗
+            ctx.fillStyle = '#e0f7fa';
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y + 40, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = '#4fc3f7';
+            ctx.beginPath();
+            ctx.arc(ship.x, ship.y + 40, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 绘制飞船支架
+            ctx.fillStyle = '#7f8c8d';
+            ctx.fillRect(ship.x - ship.width/2 + 5, ship.y + ship.height, 10, 30);
+            ctx.fillRect(ship.x + ship.width/2 - 15, ship.y + ship.height, 10, 30);
+            
+            // 绘制中国国旗
+            ctx.fillStyle = '#de2910';
+            ctx.fillRect(ship.x - 15, ship.y + 70, 30, 20);
+            
+            ctx.fillStyle = '#ffde00';
+            ctx.beginPath();
+            ctx.moveTo(ship.x - 5, ship.y + 75);
+            ctx.lineTo(ship.x, ship.y + 82);
+            ctx.lineTo(ship.x + 5, ship.y + 75);
+            ctx.lineTo(ship.x + 1, ship.y + 82);
+            ctx.lineTo(ship.x + 5, ship.y + 89);
+            ctx.lineTo(ship.x - 1, ship.y + 85);
+            ctx.lineTo(ship.x - 5, ship.y + 89);
+            ctx.lineTo(ship.x - 1, ship.y + 82);
+            ctx.closePath();
+            ctx.fill();
+        }
+        
+        // 绘制星空背景
+        function drawStars() {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            for (let i = 0; i < 100; i++) {
+                const x = Math.random() * canvas.width;
+                const y = Math.random() * canvas.height;
+                const radius = Math.random() * 1.5;
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        
+        // 绘制地球
+        function drawEarth() {
+            const earthX = canvas.width - 80;
+            const earthY = 80;
+            const earthRadius = 50;
+            
+            // 地球
+            const gradient = ctx.createRadialGradient(
+                earthX, earthY, 0,
+                earthX, earthY, earthRadius
+            );
+            gradient.addColorStop(0, '#64b5f6');
+            gradient.addColorStop(1, '#1976d2');
+            
+            ctx.beginPath();
+            ctx.arc(earthX, earthY, earthRadius, 0, Math.PI * 2);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // 陆地
+            ctx.fillStyle = '#388e3c';
+            ctx.beginPath();
+            ctx.arc(earthX - 15, earthY - 10, 20, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(earthX + 20, earthY + 15, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 云层
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            ctx.arc(earthX - 30, earthY, 10, 0, Math.PI * 2);
+            ctx.arc(earthX - 20, earthY - 5, 12, 0, Math.PI * 2);
+            ctx.arc(earthX - 10, earthY, 10, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.arc(earthX + 10, earthY - 20, 8, 0, Math.PI * 2);
+            ctx.arc(earthX + 20, earthY - 18, 10, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        // 更新飞船状态
+        function updateShip(deltaTime) {
+            if (!gameRunning || gameOver) return;
+            
+            // 计算时间（秒）
+            const deltaSeconds = deltaTime / 1000;
+            
+            // 应用重力
+            ship.velocity += moon.gravity * deltaSeconds;
+            
+            // 应用引擎推力（按住按钮时推力减小）
+            if (thrustActive && ship.fuel > 0) {
+                const thrustForce = thrustPower * 20; // 最大推力20 m/s²
+                ship.velocity -= thrustForce * deltaSeconds;
+                
+                // 消耗燃料（推力越大消耗越多）
+                ship.fuel -= thrustPower * deltaSeconds * 2;
+                if (ship.fuel < 0) ship.fuel = 0;
+            }
+            
+            // 更新高度
+            ship.altitude -= ship.velocity * deltaSeconds;
+            ship.y = moon.surfaceY - ship.altitude;
+            
+            // 更新显示
+            velocityDisplay.textContent = ship.velocity.toFixed(1) + " m/s";
+            altitudeDisplay.textContent = ship.altitude.toFixed(0) + " m";
+            fuelDisplay.textContent = Math.round(ship.fuel) + "%";
+            
+            // 更新进度条
+            fuelBar.style.width = ship.fuel + "%";
+            
+            // 速度条颜色
+            let velocityPercent = Math.abs(ship.velocity) / 15;
+            if (velocityPercent > 1) velocityPercent = 1;
+            
+            let color1, color2;
+            if (ship.velocity < 5) {
+                color1 = '#2ecc71';
+                color2 = '#27ae60';
+            } else if (ship.velocity < 10) {
+                color1 = '#f39c12';
+                color2 = '#d35400';
+            } else {
+                color1 = '#e74c3c';
+                color2 = '#c0392b';
+            }
+            
+            velocityBar.style.background = `linear-gradient(90deg, ${color1}, ${color2})`;
+            velocityBar.style.width = (velocityPercent * 100) + "%";
+            
+            // 检查着陆
+            if (ship.altitude <= 0) {
+                gameOver = true;
+                ship.altitude = 0;
+                ship.y = moon.surfaceY;
+                
+                // 着陆结果
+                if (ship.velocity < 5) {
+                    // 成功着陆
+                    showLandingResult(true);
+                } else {
+                    // 着陆失败
+                    showLandingResult(false);
+                }
+            }
+        }
+        
+        // 显示着陆结果
+        function showLandingResult(success) {
+            if (success) {
+                document.getElementById('final-velocity').textContent = ship.velocity.toFixed(1) + " m/s";
+                document.getElementById('final-fuel').textContent = Math.round(ship.fuel) + "%";
+                document.getElementById('landing-time').textContent = Math.round(gameTime/1000) + "s";
+                
+                // 计算评分
+                let score;
+                if (ship.velocity < 1) score = "A+";
+                else if (ship.velocity < 2) score = "A";
+                else if (ship.velocity < 3) score = "B";
+                else if (ship.velocity < 4) score = "C";
+                else score = "D";
+                
+                document.getElementById('landing-score').textContent = score;
+                successScreen.classList.add('active');
+            } else {
+                document.getElementById('crash-velocity').textContent = ship.velocity.toFixed(1) + " m/s";
+                document.getElementById('crash-fuel').textContent = Math.round(ship.fuel) + "%";
+                
+                // 失败原因
+                let reason;
+                if (ship.velocity > 15) reason = "速度过快（撞击）";
+                else if (ship.fuel <= 0) reason = "燃料耗尽";
+                else reason = "速度过快";
+                
+                document.getElementById('failure-reason').textContent = reason;
+                failureScreen.classList.add('active');
+            }
+        }
+        
+        // 绘制游戏场景
+        function drawScene() {
+            // 清除画布
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // 绘制星空
+            drawStars();
+            
+            // 绘制地球
+            drawEarth();
+            
+            // 绘制月球表面
+            drawMoonSurface();
+            
+            // 绘制飞船
+            drawSpaceship();
+            
+            // 绘制高度指示线
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.beginPath();
+            ctx.moveTo(0, moon.surfaceY);
+            ctx.lineTo(canvas.width, moon.surfaceY);
+            ctx.stroke();
+            
+            // 绘制高度刻度
+            for (let i = 0; i < 10; i++) {
+                const y = moon.surfaceY - (i * 100);
+                if (y < 0) break;
+                
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(20, y);
+                ctx.stroke();
+                
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.fillText((i * 100) + "m", 25, y + 5);
+            }
+        }
+        
+        // 游戏主循环
+        function gameLoop(timestamp) {
+            if (!lastTime) lastTime = timestamp;
+            const deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+            
+            if (gameRunning) {
+                gameTime += deltaTime;
+                updateShip(deltaTime);
+            }
+            drawScene();
+            
+            requestAnimationFrame(gameLoop);
+        }
+        
+        // 初始化游戏
+        function initGame() {
+            gameRunning = true;
+            gameOver = false;
+            
+            // 重置飞船状态
+            ship.y = 100;
+            ship.altitude = 1000;
+            ship.velocity = 0;
+            ship.fuel = 100;
+            
+            // 重置时间
+            gameTime = 0;
+            
+            // 隐藏结果界面
+            successScreen.classList.remove('active');
+            failureScreen.classList.remove('active');
+            
+            // 重置推力
+            thrustActive = false;
+            thrustPower = 1; // 初始为最大推力
+            thrustLevel.style.width = "100%";
+            thrustValue.textContent = "100%";
+        }
+        
+        // 事件监听
+        thrustBtn.addEventListener('mousedown', () => {
+            if (!gameRunning || gameOver) return;
+            thrustActive = true;
+        });
+        
+        thrustBtn.addEventListener('touchstart', () => {
+            if (!gameRunning || gameOver) return;
+            thrustActive = true;
+        });
+        
+        document.addEventListener('mouseup', () => {
+            thrustActive = false;
+        });
+        
+        document.addEventListener('touchend', () => {
+            thrustActive = false;
+        });
+        
+        startBtn.addEventListener('click', initGame);
+        resetBtn.addEventListener('click', initGame);
+        playAgainBtn.addEventListener('click', () => {
+            successScreen.classList.remove('active');
+            initGame();
+        });
+        
+        retryBtn.addEventListener('click', () => {
+            failureScreen.classList.remove('active');
+            initGame();
+        });
+        
+        learnBtn.addEventListener('click', () => {
+           window.location.href = '../view/moon.html'; // 跳转到长征飞船介绍页面
+        });
+        // 更新推力 - 修改为按住按钮时推力减小
+        setInterval(() => {
+            if (thrustActive && ship.fuel > 0) {
+                // 按住按钮时推力减小
+                thrustPower -= 0.05;
+                if (thrustPower < 0) thrustPower = 0;
+            } else if (!thrustActive && thrustPower < 1) {
+                // 松开按钮时推力恢复
+                thrustPower += 0.1;
+                if (thrustPower > 1) thrustPower = 1;
+            }
+            
+            // 更新推力显示
+            thrustLevel.style.width = (thrustPower * 100) + "%";
+            thrustValue.textContent = Math.round(thrustPower * 100) + "%";
+        }, 50);
+        
+        // 初始化
+        window.addEventListener('load', () => {
+            createStars();
+            gameLoop(0);
+        });
+    </script>
+</body>
+</html>

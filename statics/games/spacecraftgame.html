@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>神舟飞船组装游戏 - 中国航天挑战</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a, #2a2a6a);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* 星空背景 */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* 游戏容器 */
+        .container {
+            max-width: 1200px;
+            width: 95%;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(10, 20, 50, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 0 40px rgba(0, 100, 255, 0.4);
+            border: 2px solid rgba(100, 150, 255, 0.3);
+            margin: 2rem 0;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 0.5rem;
+            color: #4fc3f7;
+            text-shadow: 0 0 15px rgba(79, 195, 247, 0.7);
+            background: linear-gradient(to right, #4fc3f7, #2196f3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        
+        /* 游戏主体 */
+        .game-area {
+            display: flex;
+            width: 100%;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        /* 组装区 */
+        .assembly-area {
+            flex: 1;
+            background: rgba(20, 30, 70, 0.6);
+            border-radius: 15px;
+            padding: 2rem;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .assembly-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #81d4fa;
+            text-align: center;
+        }
+        
+        .assembly-instructions {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            line-height: 1.6;
+            background: rgba(30, 40, 80, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid #4fc3f7;
+        }
+        
+        .assembly-parts {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .part-item {
+            background: rgba(40, 50, 100, 0.7);
+            border-radius: 10px;
+            padding: 1.5rem 1rem;
+            cursor: grab;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid rgba(100, 150, 255, 0.3);
+            text-align: center;
+        }
+        
+        .part-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            background: rgba(60, 80, 150, 0.8);
+            border-color: #4fc3f7;
+        }
+        
+        .part-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #4fc3f7;
+        }
+        
+        .part-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .part-desc {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* 飞船展示区 */
+        .spaceship-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(20, 30, 70, 0.6);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 2px solid rgba(100, 150, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .spaceship-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #81d4fa;
+        }
+        
+        .spaceship-container {
+            position: relative;
+            width: 300px;
+            height: 500px;
+            margin: 1rem 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* 飞船部件 - 基础样式 */
+        .spaceship-part {
+            position: absolute;
+            width: 150px;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        
+        .spaceship-part.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* 推进舱 */
+        .propulsion-module {
+            bottom: 0;
+            height: 100px;
+            background: linear-gradient(to right, #7f8c8d, #34495e);
+            border-radius: 50% 50% 0 0;
+            z-index: 1;
+        }
+        
+        /* 返回舱 */
+        .return-module {
+            bottom: 90px;
+            height: 120px;
+            background: linear-gradient(to right, #c0392b, #e74c3c);
+            border-radius: 50%;
+            z-index: 2;
+        }
+        
+        /* 轨道舱 */
+        .orbital-module {
+            bottom: 190px;
+            height: 150px;
+            background: linear-gradient(to right, #3498db, #2980b9);
+            border-radius: 50% 50% 0 0;
+            z-index: 3;
+        }
+        
+        /* 太阳能帆板 */
+        .solar-panel {
+            bottom: 250px;
+            height: 180px;
+            width: 300px;
+            background: linear-gradient(to right, #16a085, #1abc9c);
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            z-index: 0;
+        }
+        
+        /* 天线 */
+        .antenna {
+            bottom: 420px;
+            height: 60px;
+            width: 5px;
+            background: #f1c40f;
+            z-index: 4;
+        }
+        
+        .antenna::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -7.5px;
+            width: 20px;
+            height: 20px;
+            background: #f39c12;
+            border-radius: 50%;
+        }
+        
+        /* 组装进度 */
+        .progress-container {
+            width: 100%;
+            background: rgba(30, 40, 80, 0.5);
+            height: 25px;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border: 1px solid rgba(100, 150, 255, 0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2196f3, #21cbf3);
+            border-radius: 12px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #81d4fa;
+        }
+        
+        /* 控制按钮 */
+        .controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #2196f3, #21cbf3);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(33, 150, 243, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.6);
+        }
+        
+        button:disabled {
+            background: linear-gradient(135deg, #555, #777);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        /* 完成界面 */
+        .completion-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        
+        .completion-screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .completion-content {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            transform: scale(0.8);
+            transition: transform 0.8s ease;
+            border: 2px solid #4fc3f7;
+            box-shadow: 0 0 40px rgba(79, 195, 247, 0.5);
+        }
+        
+        .completion-screen.active .completion-content {
+            transform: scale(1);
+        }
+        
+        .completion-icon {
+            font-size: 5rem;
+            color: #4fc3f7;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .completion-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #4fc3f7;
+        }
+        
+        .completion-message {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 900px) {
+            .game-area {
+                flex-direction: column;
+            }
+            
+            .assembly-parts {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .assembly-parts {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .assembly-area, .spaceship-area {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-rocket"></i> 神舟飞船组装挑战</h1>
+            <div class="subtitle">
+                请按照正确的顺序组装神舟飞船。了解中国航天飞船的结构，体验航天工程师的工作！
+            </div>
+        </header>
+        
+        <div class="game-area">
+            <div class="assembly-area">
+                <h2 class="assembly-title">飞船部件</h2>
+                <div class="assembly-instructions" id="instructions">
+                    第一步：请选择飞船的推进舱（提供动力和能源）
+                </div>
+                
+                <div class="assembly-parts" id="parts-container">
+                    <!-- 部件将由JS动态生成 -->
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="progress-text" id="progress-text">进度: 0/5</div>
+            </div>
+            
+            <div class="spaceship-area">
+                <h2 class="spaceship-title">飞船组装区</h2>
+                <div class="spaceship-container">
+                    <div class="spaceship-part propulsion-module" id="propulsion-module"></div>
+                    <div class="spaceship-part return-module" id="return-module"></div>
+                    <div class="spaceship-part orbital-module" id="orbital-module"></div>
+                    <div class="spaceship-part solar-panel" id="solar-panel"></div>
+                    <div class="spaceship-part antenna" id="antenna"></div>
+                </div>
+                
+                <div class="controls">
+                    <button id="reset-btn"><i class="fas fa-redo"></i> 重新开始</button>
+                    <button id="hint-btn"><i class="fas fa-lightbulb"></i> 提示</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 完成界面 -->
+    <div class="completion-screen" id="completion-screen">
+        <div class="completion-content">
+            <div class="completion-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h2 class="completion-title">组装成功！</h2>
+            <p class="completion-message">恭喜您成功组装神舟飞船！您展现了中国航天工程师的专业能力。</p>
+            <p class="completion-message">神舟飞船是中国自主研制的载人航天器，已成功完成多次载人飞行任务。</p>
+            <button id="learn-btn"><i class="fas fa-redo"></i> 学习神舟飞船知识</button>
+            <button id="play-again-btn"><i class="fas fa-play"></i> 再玩一次</button>
+        </div>
+    </div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.querySelector('.stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机大小和位置
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画持续时间
+                star.style.setProperty('--duration', `${Math.random() * 5 + 2}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 飞船部件数据
+        const shipParts = [
+            {
+                id: 'propulsion-module',
+                name: '推进舱',
+                description: '提供动力和能源，包含发动机和燃料',
+                icon: 'fas fa-fire',
+                order: 1
+            },
+            {
+                id: 'return-module',
+                name: '返回舱',
+                description: '航天员返回地球时的乘坐舱',
+                icon: 'fas fa-home',
+                order: 2
+            },
+            {
+                id: 'orbital-module',
+                name: '轨道舱',
+                description: '航天员在轨工作与生活的空间',
+                icon: 'fas fa-satellite',
+                order: 3
+            },
+            {
+                id: 'solar-panel',
+                name: '太阳能帆板',
+                description: '为飞船提供电力能源',
+                icon: 'fas fa-solar-panel',
+                order: 4
+            },
+            {
+                id: 'antenna',
+                name: '通讯天线',
+                description: '与地面控制中心进行通信',
+                icon: 'fas fa-satellite-dish',
+                order: 5
+            }
+        ];
+        
+        // 游戏状态
+        let currentStep = 1;
+        let progress = 0;
+        let shuffledParts = [];
+        
+        // DOM元素
+        const partsContainer = document.getElementById('parts-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const instructions = document.getElementById('instructions');
+        const resetBtn = document.getElementById('reset-btn');
+        const hintBtn = document.getElementById('hint-btn');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const learnBtn = document.getElementById('learn-btn');
+        const completionScreen = document.getElementById('completion-screen');
+        
+        // 初始化游戏
+        function initGame() {
+            currentStep = 1;
+            progress = 0;
+            
+            // 重置进度条
+            progressBar.style.width = '0%';
+            progressText.textContent = '进度: 0/5';
+            
+            // 重置飞船部件显示
+            shipParts.forEach(part => {
+                const partElement = document.getElementById(part.id);
+                partElement.classList.remove('active');
+            });
+            
+            // 重置提示
+            updateInstructions();
+            
+            // 生成随机顺序的部件
+            shuffledParts = [...shipParts].sort(() => Math.random() - 0.5);
+            renderParts();
+        }
+        
+        // 渲染部件
+        function renderParts() {
+            partsContainer.innerHTML = '';
+            
+            shuffledParts.forEach(part => {
+                const partElement = document.createElement('div');
+                partElement.classList.add('part-item');
+                partElement.dataset.id = part.id;
+                partElement.dataset.order = part.order;
+                
+                partElement.innerHTML = `
+                    <div class="part-icon"><i class="${part.icon}"></i></div>
+                    <div class="part-name">${part.name}</div>
+                    <div class="part-desc">${part.description}</div>
+                `;
+                
+                partElement.addEventListener('click', () => selectPart(part));
+                partsContainer.appendChild(partElement);
+            });
+        }
+        
+        // 选择部件
+        function selectPart(part) {
+            if (part.order === currentStep) {
+                // 正确选择
+                const partElement = document.getElementById(part.id);
+                partElement.classList.add('active');
+                
+                // 播放成功音效
+                playSuccessSound();
+                
+                // 更新进度
+                currentStep++;
+                progress = ((currentStep - 1) / 5) * 100;
+                progressBar.style.width = `${progress}%`;
+                progressText.textContent = `进度: ${currentStep - 1}/5`;
+                
+                // 更新提示
+                updateInstructions();
+                
+                // 检查游戏是否完成
+                if (currentStep > 5) {
+                    setTimeout(() => {
+                        completionScreen.classList.add('active');
+                    }, 1000);
+                }
+            } else {
+                // 错误选择
+                playErrorSound();
+                shakePartsContainer();
+                showErrorFeedback(part);
+            }
+        }
+        
+        // 更新提示
+        function updateInstructions() {
+            if (currentStep > 5) return;
+            
+            const nextPart = shipParts.find(part => part.order === currentStep);
+            instructions.textContent = `第${currentStep}步：请选择${nextPart.name}（${nextPart.description}）`;
+        }
+        
+        // 显示错误反馈
+        function showErrorFeedback(part) {
+            const partElements = document.querySelectorAll('.part-item');
+            partElements.forEach(element => {
+                if (element.dataset.id === part.id) {
+                    element.style.animation = 'shake 0.5s';
+                    element.style.backgroundColor = 'rgba(231, 76, 60, 0.3)';
+                    element.style.borderColor = '#e74c3c';
+                    
+                    setTimeout(() => {
+                        element.style.animation = '';
+                        element.style.backgroundColor = '';
+                        element.style.borderColor = '';
+                    }, 1000);
+                }
+            });
+        }
+        
+        // 摇晃部件容器
+        function shakePartsContainer() {
+            partsContainer.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                partsContainer.style.animation = '';
+            }, 500);
+        }
+        
+        // 播放成功音效
+        function playSuccessSound() {
+            // 实际项目中可以使用音频文件
+            // 这里使用简单的音调模拟
+            try {
+                const context = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = context.createOscillator();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(523.25, context.currentTime); // C5
+                oscillator.connect(context.destination);
+                oscillator.start();
+                setTimeout(() => oscillator.stop(), 200);
+            } catch (e) {
+                console.log("音频播放失败:", e);
+            }
+        }
+        
+        // 播放错误音效
+        function playErrorSound() {
+            try {
+                const context = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = context.createOscillator();
+                oscillator.type = 'sine';
+                oscillator.frequency.setValueAtTime(261.63, context.currentTime); // C4
+                oscillator.connect(context.destination);
+                oscillator.start();
+                setTimeout(() => oscillator.stop(), 300);
+            } catch (e) {
+                console.log("音频播放失败:", e);
+            }
+        }
+        
+        // 添加摇晃动画
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // 提示功能
+        function showHint() {
+            if (currentStep > 5) return;
+            
+            const nextPart = shipParts.find(part => part.order === currentStep);
+            const partElements = document.querySelectorAll('.part-item');
+            
+            partElements.forEach(element => {
+                if (element.dataset.id === nextPart.id) {
+                    element.style.boxShadow = '0 0 20px rgba(79, 195, 247, 0.8)';
+                    element.style.borderColor = '#4fc3f7';
+                    element.style.transform = 'scale(1.05)';
+                    
+                    setTimeout(() => {
+                        element.style.boxShadow = '';
+                        element.style.borderColor = '';
+                        element.style.transform = '';
+                    }, 2000);
+                }
+            });
+        }
+        
+        // 事件监听
+        resetBtn.addEventListener('click', initGame);
+        hintBtn.addEventListener('click', showHint);
+        playAgainBtn.addEventListener('click', () => {
+            completionScreen.classList.remove('active');
+            initGame();
+        });
+        learnBtn.addEventListener('click', () => {
+            window.location.href = '../view/spacecraft.html'; // 跳转到长征飞船介绍页面
+        });
+        // 初始化游戏
+        window.addEventListener('load', () => {
+            createStars();
+            initGame();
+        });
+    </script>
+</body>
+</html>

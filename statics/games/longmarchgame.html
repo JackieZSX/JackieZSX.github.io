@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>飞船躲避陨石</title>
+    <title>飞船躲避陨石 - 中国航天挑战</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -176,6 +176,13 @@
             color: #4fc3f7;
         }
         
+        .btn-container {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
         button {
             background: linear-gradient(135deg, #2196f3, #21cbf3);
             color: white;
@@ -186,13 +193,16 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 10px rgba(33, 150, 243, 0.4);
-            margin-top: 1rem;
             display: inline-block;
         }
         
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(33, 150, 243, 0.6);
+        }
+        
+        #pause-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
         }
         
         /* 错误界面 */
@@ -283,6 +293,36 @@
             line-height: 1.5;
         }
         
+        /* 暂停覆盖层 */
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .pause-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .pause-text {
+            font-size: 3rem;
+            color: #ff9800;
+            text-shadow: 0 0 10px rgba(255, 152, 0, 0.7);
+            margin-bottom: 2rem;
+        }
+        
         /* 响应式设计 */
         @media (max-width: 850px) {
             #game-container {
@@ -316,6 +356,15 @@
             .panel-value {
                 font-size: 1.5rem;
             }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -325,13 +374,19 @@
     
     <div class="container">
         <header>
-            <h1><i class="fas fa-space-shuttle"></i> 飞船躲避陨石</h1>
+            <h1><i class="fas fa-space-shuttle"></i> 飞船躲避陨石 - 中国航天挑战</h1>
             <div class="subtitle">控制飞船躲避下落的陨石，坚持越久得分越高！</div>
         </header>
         
         <div id="game-container">
             <canvas id="game-canvas"></canvas>
             <div id="spaceship" class="spaceship"></div>
+            
+            <!-- 暂停覆盖层 -->
+            <div class="pause-overlay" id="pause-overlay">
+                <div class="pause-text">游戏暂停</div>
+                <button id="resume-btn">继续游戏</button>
+            </div>
         </div>
         
         <div class="game-controls">
@@ -351,7 +406,10 @@
             </div>
         </div>
         
-        <button id="start-btn">开始游戏</button>
+        <div class="btn-container">
+            <button id="start-btn">开始游戏</button>
+            <button id="pause-btn">暂停游戏</button>
+        </div>
         
         <div class="instructions">
             <h3>游戏说明</h3>
@@ -361,6 +419,7 @@
                 <li>每成功躲避一个陨石得10分</li>
                 <li>飞船被陨石击中则游戏结束</li>
                 <li>生存时间越长，陨石下落速度越快</li>
+                <li>按空格键也可以暂停/继续游戏</li>
             </ul>
         </div>
     </div>
@@ -373,7 +432,8 @@
             </div>
             <h2 class="error-title">飞船被击中！</h2>
             <p class="error-message">很遗憾，您的飞船未能避开陨石。中国航天需要更精湛的驾驶技术！</p>
-            <button id="learning-btn">学习中国长征飞船</button>
+            <p class="error-message">最终得分: <span id="final-score">0</span> | 生存时间: <span id="final-time">0s</span></p>
+            <button id="learning-btn">了解长征飞船</button>
             <button id="retry-btn">重新挑战</button>
         </div>
     </div>
@@ -410,9 +470,14 @@
         const timeDisplay = document.getElementById('time');
         const asteroidsDisplay = document.getElementById('asteroids');
         const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resumeBtn = document.getElementById('resume-btn');
         const retryBtn = document.getElementById('retry-btn');
         const learningBtn = document.getElementById('learning-btn');
         const errorContainer = document.getElementById('error-container');
+        const pauseOverlay = document.getElementById('pause-overlay');
+        const finalScore = document.getElementById('final-score');
+        const finalTime = document.getElementById('final-time');
         
         // 设置Canvas尺寸
         function setCanvasSize() {
@@ -423,6 +488,7 @@
         
         // 游戏状态
         let gameRunning = false;
+        let gamePaused = false;
         let score = 0;
         let gameTime = 0;
         let asteroidsAvoided = 0;
@@ -450,6 +516,8 @@
         
         // 创建陨石
         function createAsteroid() {
+            if (!gameRunning || gamePaused) return;
+            
             const container = document.getElementById('game-container');
             const size = Math.random() * 40 + 20;
             const asteroid = document.createElement('div');
@@ -518,6 +586,10 @@
             asteroids.forEach(asteroid => asteroid.remove());
             asteroids = [];
             
+            // 更新最终分数
+            finalScore.textContent = score;
+            finalTime.textContent = `${Math.floor(gameTime/60)}s`;
+            
             // 显示错误界面
             setTimeout(() => {
                 errorContainer.classList.add('active');
@@ -538,7 +610,7 @@
         
         // 游戏主循环
         function gameLoop(timestamp) {
-            if (!gameRunning) return;
+            if (!gameRunning || gamePaused) return;
             
             // 计算时间差
             const deltaTime = timestamp - lastTime;
@@ -571,6 +643,7 @@
         function startGame() {
             // 重置游戏状态
             gameRunning = true;
+            gamePaused = false;
             score = 0;
             gameTime = 0;
             asteroidsAvoided = 0;
@@ -582,8 +655,12 @@
             timeDisplay.textContent = "0s";
             asteroidsDisplay.textContent = asteroidsAvoided;
             
-            // 隐藏错误界面
+            // 隐藏错误界面和暂停覆盖
             errorContainer.classList.remove('active');
+            pauseOverlay.classList.remove('active');
+            
+            // 更新暂停按钮文本
+            pauseBtn.textContent = "暂停游戏";
             
             // 初始化飞船位置
             initSpaceship();
@@ -593,9 +670,26 @@
             animationId = requestAnimationFrame(gameLoop);
         }
         
+        // 暂停游戏
+        function pauseGame() {
+            if (!gameRunning) return;
+            
+            gamePaused = !gamePaused;
+            
+            if (gamePaused) {
+                pauseOverlay.classList.add('active');
+                pauseBtn.textContent = "继续游戏";
+            } else {
+                pauseOverlay.classList.remove('active');
+                pauseBtn.textContent = "暂停游戏";
+                lastTime = performance.now();
+                animationId = requestAnimationFrame(gameLoop);
+            }
+        }
+        
         // 飞船跟随鼠标移动
         document.getElementById('game-container').addEventListener('mousemove', (e) => {
-            if (!gameRunning) return;
+            if (!gameRunning || gamePaused) return;
             
             const container = document.getElementById('game-container');
             const rect = container.getBoundingClientRect();
@@ -615,7 +709,7 @@
         
         // 触摸屏支持
         document.getElementById('game-container').addEventListener('touchmove', (e) => {
-            if (!gameRunning) return;
+            if (!gameRunning || gamePaused) return;
             e.preventDefault();
             
             const container = document.getElementById('game-container');
@@ -635,13 +729,22 @@
             spaceship.style.top = `${spaceshipY}px`;
         }, { passive: false });
         
+        // 键盘事件监听（空格键暂停）
+        document.addEventListener('keydown', (e) => {
+            if (e.code === 'Space' && gameRunning) {
+                pauseGame();
+                e.preventDefault();
+            }
+        });
+        
         // 事件监听
         startBtn.addEventListener('click', startGame);
+        pauseBtn.addEventListener('click', pauseGame);
+        resumeBtn.addEventListener('click', pauseGame);
         retryBtn.addEventListener('click', startGame);
         learningBtn.addEventListener('click', () => {
-            window.location.href = '../view/longmarch.html'; // 替换为实际学习页面链接
+            window.location.href = '../view/longmarch.html'; // 跳转到长征飞船介绍页面
         });
-
         // 初始化
         window.addEventListener('load', () => {
             createStars();

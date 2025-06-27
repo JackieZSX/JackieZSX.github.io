@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国卫星知识问答</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a, #2a2a6a);
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(10, 20, 50, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #4fc3f7;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.7);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-container {
+            background: rgba(30, 40, 80, 0.6);
+            height: 20px;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            border: 1px solid rgba(100, 150, 255, 0.2);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #2196f3, #21cbf3);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .question-container {
+            background: rgba(20, 30, 70, 0.7);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+        }
+        
+        .question-number {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #81d4fa;
+        }
+        
+        .question-text {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+        
+        .options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .option {
+            background: rgba(40, 50, 100, 0.6);
+            padding: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option:hover {
+            background: rgba(60, 80, 150, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .option.selected {
+            background: rgba(30, 100, 200, 0.8);
+            border-color: #4fc3f7;
+        }
+        
+        .option.correct {
+            background: rgba(46, 204, 113, 0.7);
+            border-color: #2ecc71;
+        }
+        
+        .option.incorrect {
+            background: rgba(231, 76, 60, 0.7);
+            border-color: #e74c3c;
+        }
+        
+        .option-label {
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(30, 60, 120, 0.8);
+            border-radius: 50%;
+        }
+        
+        .option-text {
+            flex: 1;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #2196f3, #21cbf3);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.4);
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.6);
+        }
+        
+        button:disabled {
+            background: linear-gradient(135deg, #555, #777);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .error-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #b71c1c, #7b1fa2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        
+        .error-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .error-content {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            transform: scale(0.8);
+            transition: transform 0.8s ease;
+            border: 2px solid #ff5252;
+            box-shadow: 0 0 30px rgba(255, 82, 82, 0.5);
+        }
+        
+        .error-container.active .error-content {
+            transform: scale(1);
+        }
+        
+        .error-icon {
+            font-size: 5rem;
+            color: #ff5252;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff5252;
+        }
+        
+        .error-message {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .satellite-animation {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 300px;
+            z-index: -1;
+        }
+        
+        .earth {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #1e88e5, #0d47a1);
+            border-radius: 50%;
+            box-shadow: 0 0 40px rgba(33, 150, 243, 0.7);
+        }
+        
+        .satellite {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 30px;
+            height: 15px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            transform-origin: center 150px;
+            animation: orbit 10s linear infinite;
+        }
+        
+        .satellite::before, .satellite::after {
+            content: '';
+            position: absolute;
+            background: #bdbdbd;
+        }
+        
+        .satellite::before {
+            width: 5px;
+            height: 25px;
+            top: -25px;
+            left: 12.5px;
+        }
+        
+        .satellite::after {
+            width: 15px;
+            height: 5px;
+            top: 5px;
+            right: -15px;
+        }
+        
+        @keyframes orbit {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .score-display {
+            text-align: center;
+            font-size: 1.3rem;
+            margin-top: 1rem;
+            background: rgba(30, 40, 80, 0.6);
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 1px solid rgba(100, 150, 255, 0.2);
+        }
+        
+        .correct-answer {
+            background: rgba(46, 204, 113, 0.2);
+            padding: 1rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            border-left: 4px solid #2ecc71;
+            display: none;
+        }
+        
+        .correct-answer.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .explanation {
+            margin-top: 0.5rem;
+            font-size: 1.1rem;
+            color: #81d4fa;
+        }
+        
+        @media (max-width: 768px) {
+            .options-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .question-container {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div class="stars" id="stars"></div>
+    
+    <!-- 地球和卫星动画 -->
+    <div class="satellite-animation">
+        <div class="earth"></div>
+        <div class="satellite"></div>
+    </div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-satellite"></i> 中国卫星知识问答</h1>
+            <div class="subtitle">测试您对中国航天成就的了解</div>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        
+        <div class="question-container">
+            <div class="question-number" id="question-number">问题 1/5</div>
+            <div class="question-text" id="question-text">神舟六号飞船是哪一年发射的？</div>
+            
+            <div class="options-container" id="options-container">
+                <!-- 选项将由JS动态生成 -->
+            </div>
+            
+            <div class="correct-answer" id="correct-answer">
+                <strong>正确答案: <span id="correct-answer-text"></span></strong>
+                <div class="explanation" id="explanation"></div>
+            </div>
+            
+            <div class="controls">
+                <button id="next-btn" disabled>下一题</button>
+                <button id="submit-btn">提交答案</button>
+            </div>
+        </div>
+        
+        <div class="score-display">
+            得分: <span id="score">0</span> / <span id="total">5</span>
+        </div>
+    </div>
+    
+    <!-- 错误提示界面 -->
+    <div class="error-container" id="error-container">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="error-title">回答错误！</h2>
+            <p class="error-message">很遗憾，您的答案不正确。中国航天事业需要更严谨的态度！</p>
+            <button id="retry-btn">再试一次</button>
+        </div>
+    </div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机大小和位置
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画持续时间
+                star.style.setProperty('--duration', `${Math.random() * 5 + 2}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 问题数据
+        const questions = [
+            {
+                question: "神舟六号飞船是哪一年发射的？",
+                options: ["2003年", "2005年", "2008年", "2010年"],
+                answer: 1,
+                explanation: "神舟六号飞船于2005年10月12日发射升空，是中国的第二次载人航天飞行任务。"
+            },
+            {
+                question: "中国第一颗人造地球卫星叫什么名字？",
+                options: ["东方红一号", "风云一号", "实践一号", "嫦娥一号"],
+                answer: 0,
+                explanation: "东方红一号于1970年4月24日发射成功，是中国发射的第一颗人造地球卫星。"
+            },
+            {
+                question: "中国第一个月球探测器是什么？",
+                options: ["嫦娥一号", "玉兔号", "天问一号", "鹊桥号"],
+                answer: 0,
+                explanation: "嫦娥一号于2007年10月24日发射，是中国首颗绕月人造卫星。"
+            },
+            {
+                question: "北斗卫星导航系统是哪一年完成全球组网的？",
+                options: ["2018年", "2019年", "2020年", "2021年"],
+                answer: 2,
+                explanation: "北斗三号全球卫星导航系统于2020年7月31日正式开通，标志着北斗系统完成全球组网。"
+            },
+            {
+                question: "中国首个火星探测器叫什么名字？",
+                options: ["天问一号", "萤火一号", "祝融号", "火星一号"],
+                answer: 0,
+                explanation: "天问一号于2020年7月23日发射，是中国首个火星探测器，由环绕器、着陆器和巡视器组成。"
+            }
+        ];
+        
+        // 游戏状态
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOption = null;
+        
+        // DOM元素
+        const questionNumberEl = document.getElementById('question-number');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const progressBarEl = document.getElementById('progress-bar');
+        const scoreEl = document.getElementById('score');
+        const totalEl = document.getElementById('total');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const errorContainer = document.getElementById('error-container');
+        const correctAnswerEl = document.getElementById('correct-answer');
+        const correctAnswerTextEl = document.getElementById('correct-answer-text');
+        const explanationEl = document.getElementById('explanation');
+        
+        // 初始化游戏
+        function initGame() {
+            totalEl.textContent = questions.length;
+            loadQuestion();
+        }
+        
+        // 加载问题
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            
+            // 更新问题编号和文本
+            questionNumberEl.textContent = `问题 ${currentQuestion + 1}/${questions.length}`;
+            questionTextEl.textContent = question.question;
+            
+            // 更新进度条
+            const progress = ((currentQuestion) / questions.length) * 100;
+            progressBarEl.style.width = `${progress}%`;
+            
+            // 清空选项容器
+            optionsContainerEl.innerHTML = '';
+            
+            // 添加选项
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.classList.add('option');
+                optionEl.dataset.index = index;
+                
+                optionEl.innerHTML = `
+                    <div class="option-label">${String.fromCharCode(65 + index)}</div>
+                    <div class="option-text">${option}</div>
+                `;
+                
+                optionEl.addEventListener('click', selectOption);
+                optionsContainerEl.appendChild(optionEl);
+            });
+            
+            // 重置状态
+            selectedOption = null;
+            nextBtn.disabled = true;
+            submitBtn.disabled = false;
+            correctAnswerEl.classList.remove('show');
+        }
+        
+        // 选择选项
+        function selectOption(e) {
+            // 移除之前的选择
+            const options = document.querySelectorAll('.option');
+            options.forEach(option => option.classList.remove('selected'));
+            
+            // 设置当前选择
+            const optionEl = e.currentTarget;
+            optionEl.classList.add('selected');
+            selectedOption = parseInt(optionEl.dataset.index);
+            
+            // 启用提交按钮
+            submitBtn.disabled = false;
+        }
+        
+        // 提交答案
+        function submitAnswer() {
+            if (selectedOption === null) return;
+            
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option');
+            const selectedOptionEl = options[selectedOption];
+            
+            // 禁用所有选项
+            options.forEach(option => {
+                option.removeEventListener('click', selectOption);
+                option.style.cursor = 'default';
+            });
+            
+            // 禁用提交按钮
+            submitBtn.disabled = true;
+            
+            // 检查答案
+            if (selectedOption === question.answer) {
+                // 回答正确
+                selectedOptionEl.classList.add('correct');
+                score++;
+                scoreEl.textContent = score;
+                
+                // 显示正确答案（如果有）
+                showCorrectAnswer();
+                
+                // 启用下一题按钮
+                nextBtn.disabled = false;
+            } else {
+                // 回答错误
+                selectedOptionEl.classList.add('incorrect');
+                
+                // 显示正确答案
+                options[question.answer].classList.add('correct');
+                showCorrectAnswer();
+                
+                // 显示错误界面
+                showErrorScreen();
+            }
+        }
+        
+        // 显示正确答案
+        function showCorrectAnswer() {
+            const question = questions[currentQuestion];
+            correctAnswerTextEl.textContent = question.options[question.answer];
+            explanationEl.textContent = question.explanation;
+            correctAnswerEl.classList.add('show');
+        }
+        
+        // 显示错误界面
+        function showErrorScreen() {
+            errorContainer.classList.add('active');
+        }
+        
+        // 下一题
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                // 游戏结束
+                endGame();
+            }
+        }
+        
+        // 游戏结束
+        function endGame() {
+            questionNumberEl.textContent = "完成！";
+            questionTextEl.textContent = `恭喜您完成了所有问题！您的最终得分是 ${score}/${questions.length}`;
+            optionsContainerEl.innerHTML = '';
+            nextBtn.style.display = 'none';
+            submitBtn.style.display = 'none';
+            correctAnswerEl.classList.remove('show');
+            progressBarEl.style.width = '100%';
+            
+            // 显示结果信息
+            const resultMessage = document.createElement('div');
+            resultMessage.classList.add('score-display');
+            resultMessage.style.marginTop = '2rem';
+            resultMessage.style.fontSize = '1.5rem';
+            resultMessage.innerHTML = `
+                <p>${score >= 3 ? '🎉 太棒了！您对中国卫星的了解非常深入！' : '💪 继续努力，中国航天需要您的支持！'}</p>
+                <button id="learning-btn style="margin-top: 1.5rem;">重新开始</button>
+                <button id="restart-btn" style="margin-top: 1.5rem;">重新开始</button>
+            `;
+            
+            document.querySelector('.question-container').appendChild(resultMessage);
+            
+        
+            document.getElementById('restart-btn').addEventListener('click', () => {
+                location.reload();
+            });
+
+            document.getElementById('learning-btn').addEventListener('click', () => {
+                window.location.href = '../view/statellite.html';
+            });
+        }
+        
+        // 重试当前问题
+        function retryQuestion() {
+            errorContainer.classList.remove('active');
+            loadQuestion();
+        }
+        
+        // 事件监听
+        submitBtn.addEventListener('click', submitAnswer);
+        nextBtn.addEventListener('click', nextQuestion);
+        retryBtn.addEventListener('click', retryQuestion);
+        
+        // 初始化
+        window.addEventListener('load', () => {
+            createStars();
+            initGame();
+        });
+    </script>
+</body>
+</html>

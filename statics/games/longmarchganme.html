@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>飞船躲避陨石</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a, #2a2a6a);
+            color: #fff;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* 星空背景 */
+        #stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration, 4s) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        /* 游戏容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(10, 20, 50, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(100, 150, 255, 0.3);
+            width: 100%;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #4fc3f7;
+            text-shadow: 0 0 10px rgba(79, 195, 247, 0.7);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        /* 游戏区域 */
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 500px;
+            background: rgba(10, 15, 30, 0.6);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.3);
+            border: 2px solid rgba(100, 150, 255, 0.3);
+            margin: 1rem 0;
+        }
+        
+        #game-canvas {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 飞船样式 */
+        .spaceship {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            background: linear-gradient(to bottom, #3498db, #1a5276);
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.7);
+            z-index: 10;
+            transition: transform 0.1s;
+        }
+        
+        .spaceship::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(to bottom, #e74c3c, #c0392b);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+        }
+        
+        /* 陨石样式 */
+        .asteroid {
+            position: absolute;
+            background: linear-gradient(135deg, #7f8c8d, #34495e);
+            border-radius: 50%;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5), 
+                        0 0 10px rgba(127, 140, 141, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .asteroid::before {
+            content: '';
+            position: absolute;
+            width: 30%;
+            height: 30%;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 50%;
+        }
+        
+        /* 游戏控制面板 */
+        .game-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        
+        .control-panel {
+            background: rgba(20, 30, 70, 0.7);
+            padding: 1.2rem;
+            border-radius: 15px;
+            text-align: center;
+            min-width: 180px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(100, 150, 255, 0.2);
+        }
+        
+        .panel-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: #81d4fa;
+        }
+        
+        .panel-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4fc3f7;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #2196f3, #21cbf3);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(33, 150, 243, 0.4);
+            margin-top: 1rem;
+            display: inline-block;
+        }
+        
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(33, 150, 243, 0.6);
+        }
+        
+        /* 错误界面 */
+        .error-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #b71c1c, #7b1fa2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        
+        .error-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .error-content {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 600px;
+            transform: scale(0.8);
+            transition: transform 0.8s ease;
+            border: 2px solid #ff5252;
+            box-shadow: 0 0 30px rgba(255, 82, 82, 0.5);
+        }
+        
+        .error-container.active .error-content {
+            transform: scale(1);
+        }
+        
+        .error-icon {
+            font-size: 5rem;
+            color: #ff5252;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .error-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #ff5252;
+        }
+        
+        .error-message {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        /* 游戏说明 */
+        .instructions {
+            background: rgba(20, 30, 70, 0.7);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            max-width: 800px;
+            border: 1px solid rgba(100, 150, 255, 0.2);
+        }
+        
+        .instructions h3 {
+            color: #4fc3f7;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .instructions ul {
+            padding-left: 1.5rem;
+        }
+        
+        .instructions li {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 850px) {
+            #game-container {
+                width: 95vw;
+                height: 400px;
+            }
+            
+            .game-controls {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            #game-container {
+                height: 300px;
+            }
+            
+            .control-panel {
+                min-width: 140px;
+                padding: 1rem;
+            }
+            
+            .panel-value {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 星空背景 -->
+    <div id="stars"></div>
+    
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-space-shuttle"></i> 飞船躲避陨石</h1>
+            <div class="subtitle">控制飞船躲避下落的陨石，坚持越久得分越高！</div>
+        </header>
+        
+        <div id="game-container">
+            <canvas id="game-canvas"></canvas>
+            <div id="spaceship" class="spaceship"></div>
+        </div>
+        
+        <div class="game-controls">
+            <div class="control-panel">
+                <div class="panel-title">得分</div>
+                <div class="panel-value" id="score">0</div>
+            </div>
+            
+            <div class="control-panel">
+                <div class="panel-title">生存时间</div>
+                <div class="panel-value" id="time">0s</div>
+            </div>
+            
+            <div class="control-panel">
+                <div class="panel-title">躲避陨石</div>
+                <div class="panel-value" id="asteroids">0</div>
+            </div>
+        </div>
+        
+        <button id="start-btn">开始游戏</button>
+        
+        <div class="instructions">
+            <h3>游戏说明</h3>
+            <ul>
+                <li>使用鼠标或手指移动控制飞船</li>
+                <li>躲避从上方下落的陨石</li>
+                <li>每成功躲避一个陨石得10分</li>
+                <li>飞船被陨石击中则游戏结束</li>
+                <li>生存时间越长，陨石下落速度越快</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- 错误界面 -->
+    <div class="error-container" id="error-container">
+        <div class="error-content">
+            <div class="error-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h2 class="error-title">飞船被击中！</h2>
+            <p class="error-message">很遗憾，您的飞船未能避开陨石。中国航天需要更精湛的驾驶技术！</p>
+            <button id="learning-btn">学习中国长征飞船</button>
+            <button id="retry-btn">重新挑战</button>
+        </div>
+    </div>
+    
+    <script>
+        // 创建星空背景
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            const starCount = 200;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.classList.add('star');
+                
+                // 随机大小和位置
+                const size = Math.random() * 3 + 1;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画持续时间
+                star.style.setProperty('--duration', `${Math.random() * 5 + 2}s`);
+                
+                starsContainer.appendChild(star);
+            }
+        }
+        
+        // 游戏变量
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
+        const spaceship = document.getElementById('spaceship');
+        const scoreDisplay = document.getElementById('score');
+        const timeDisplay = document.getElementById('time');
+        const asteroidsDisplay = document.getElementById('asteroids');
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const learningBtn = document.getElementById('learning-btn');
+        const errorContainer = document.getElementById('error-container');
+        
+        // 设置Canvas尺寸
+        function setCanvasSize() {
+            const container = document.getElementById('game-container');
+            canvas.width = container.clientWidth;
+            canvas.height = container.clientHeight;
+        }
+        
+        // 游戏状态
+        let gameRunning = false;
+        let score = 0;
+        let gameTime = 0;
+        let asteroidsAvoided = 0;
+        let asteroids = [];
+        let spaceshipX = 0;
+        let spaceshipY = 0;
+        let animationId = null;
+        let lastTime = 0;
+        let asteroidSpeed = 2;
+        let asteroidSpawnRate = 60; // 帧数
+        
+        // 飞船尺寸
+        const SHIP_WIDTH = 40;
+        const SHIP_HEIGHT = 60;
+        
+        // 初始化飞船位置
+        function initSpaceship() {
+            const container = document.getElementById('game-container');
+            spaceshipX = container.clientWidth / 2 - SHIP_WIDTH / 2;
+            spaceshipY = container.clientHeight - SHIP_HEIGHT - 20;
+            
+            spaceship.style.left = `${spaceshipX}px`;
+            spaceship.style.top = `${spaceshipY}px`;
+        }
+        
+        // 创建陨石
+        function createAsteroid() {
+            const container = document.getElementById('game-container');
+            const size = Math.random() * 40 + 20;
+            const asteroid = document.createElement('div');
+            asteroid.classList.add('asteroid');
+            
+            asteroid.style.width = `${size}px`;
+            asteroid.style.height = `${size}px`;
+            asteroid.style.left = `${Math.random() * (container.clientWidth - size)}px`;
+            asteroid.style.top = `-${size}px`;
+            
+            asteroid.dataset.size = size;
+            asteroid.dataset.speed = Math.random() * asteroidSpeed + asteroidSpeed;
+            
+            document.getElementById('game-container').appendChild(asteroid);
+            asteroids.push(asteroid);
+        }
+        
+        // 更新陨石位置
+        function updateAsteroids() {
+            for (let i = asteroids.length - 1; i >= 0; i--) {
+                const asteroid = asteroids[i];
+                const currentTop = parseFloat(asteroid.style.top);
+                const newTop = currentTop + parseFloat(asteroid.dataset.speed);
+                
+                asteroid.style.top = `${newTop}px`;
+                
+                // 检查陨石是否超出屏幕
+                if (newTop > canvas.height) {
+                    asteroid.remove();
+                    asteroids.splice(i, 1);
+                    score += 10;
+                    asteroidsAvoided++;
+                    scoreDisplay.textContent = score;
+                    asteroidsDisplay.textContent = asteroidsAvoided;
+                }
+            }
+        }
+        
+        // 碰撞检测
+        function checkCollision() {
+            const shipRect = spaceship.getBoundingClientRect();
+            
+            for (let i = 0; i < asteroids.length; i++) {
+                const asteroid = asteroids[i];
+                const asteroidRect = asteroid.getBoundingClientRect();
+                
+                if (
+                    shipRect.left < asteroidRect.right &&
+                    shipRect.right > asteroidRect.left &&
+                    shipRect.top < asteroidRect.bottom &&
+                    shipRect.bottom > asteroidRect.top
+                ) {
+                    return true; // 碰撞发生
+                }
+            }
+            
+            return false;
+        }
+        
+        // 游戏结束
+        function gameOver() {
+            gameRunning = false;
+            cancelAnimationFrame(animationId);
+            
+            // 移除所有陨石
+            asteroids.forEach(asteroid => asteroid.remove());
+            asteroids = [];
+            
+            // 显示错误界面
+            setTimeout(() => {
+                errorContainer.classList.add('active');
+            }, 500);
+        }
+        
+        // 更新游戏时间
+        function updateGameTime() {
+            gameTime++;
+            timeDisplay.textContent = `${Math.floor(gameTime/60)}s`;
+            
+            // 每10秒增加难度
+            if (gameTime % 600 === 0) {
+                asteroidSpeed += 0.5;
+                asteroidSpawnRate = Math.max(20, asteroidSpawnRate - 5);
+            }
+        }
+        
+        // 游戏主循环
+        function gameLoop(timestamp) {
+            if (!gameRunning) return;
+            
+            // 计算时间差
+            const deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+            
+            // 更新陨石位置
+            updateAsteroids();
+            
+            // 随机生成新陨石
+            if (Math.random() * asteroidSpawnRate < 1) {
+                createAsteroid();
+            }
+            
+            // 更新游戏时间
+            if (gameTime % 60 === 0) {
+                updateGameTime();
+            }
+            
+            // 检查碰撞
+            if (checkCollision()) {
+                gameOver();
+                return;
+            }
+            
+            // 继续游戏循环
+            animationId = requestAnimationFrame(gameLoop);
+        }
+        
+        // 开始游戏
+        function startGame() {
+            // 重置游戏状态
+            gameRunning = true;
+            score = 0;
+            gameTime = 0;
+            asteroidsAvoided = 0;
+            asteroidSpeed = 2;
+            asteroidSpawnRate = 60;
+            
+            // 更新显示
+            scoreDisplay.textContent = score;
+            timeDisplay.textContent = "0s";
+            asteroidsDisplay.textContent = asteroidsAvoided;
+            
+            // 隐藏错误界面
+            errorContainer.classList.remove('active');
+            
+            // 初始化飞船位置
+            initSpaceship();
+            
+            // 启动游戏循环
+            lastTime = performance.now();
+            animationId = requestAnimationFrame(gameLoop);
+        }
+        
+        // 飞船跟随鼠标移动
+        document.getElementById('game-container').addEventListener('mousemove', (e) => {
+            if (!gameRunning) return;
+            
+            const container = document.getElementById('game-container');
+            const rect = container.getBoundingClientRect();
+            
+            // 计算鼠标在容器内的位置
+            spaceshipX = e.clientX - rect.left - SHIP_WIDTH / 2;
+            spaceshipY = e.clientY - rect.top - SHIP_HEIGHT / 2;
+            
+            // 限制在容器范围内
+            spaceshipX = Math.max(0, Math.min(spaceshipX, rect.width - SHIP_WIDTH));
+            spaceshipY = Math.max(0, Math.min(spaceshipY, rect.height - SHIP_HEIGHT));
+            
+            // 更新飞船位置
+            spaceship.style.left = `${spaceshipX}px`;
+            spaceship.style.top = `${spaceshipY}px`;
+        });
+        
+        // 触摸屏支持
+        document.getElementById('game-container').addEventListener('touchmove', (e) => {
+            if (!gameRunning) return;
+            e.preventDefault();
+            
+            const container = document.getElementById('game-container');
+            const rect = container.getBoundingClientRect();
+            const touch = e.touches[0];
+            
+            // 计算触摸点在容器内的位置
+            spaceshipX = touch.clientX - rect.left - SHIP_WIDTH / 2;
+            spaceshipY = touch.clientY - rect.top - SHIP_HEIGHT / 2;
+            
+            // 限制在容器范围内
+            spaceshipX = Math.max(0, Math.min(spaceshipX, rect.width - SHIP_WIDTH));
+            spaceshipY = Math.max(0, Math.min(spaceshipY, rect.height - SHIP_HEIGHT));
+            
+            // 更新飞船位置
+            spaceship.style.left = `${spaceshipX}px`;
+            spaceship.style.top = `${spaceshipY}px`;
+        }, { passive: false });
+        
+        // 事件监听
+        startBtn.addEventListener('click', startGame);
+        retryBtn.addEventListener('click', startGame);
+        learningBtn.addEventListener('click', () => {
+            window.location.href = '../view/longmarch.html'; // 替换为实际学习页面链接
+        });
+
+        // 初始化
+        window.addEventListener('load', () => {
+            createStars();
+            setCanvasSize();
+            initSpaceship();
+        });
+        
+        window.addEventListener('resize', () => {
+            setCanvasSize();
+            if (!gameRunning) {
+                initSpaceship();
+            }
+        });
+    </script>
+</body>
+</html>

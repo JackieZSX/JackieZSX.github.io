@@ -644,7 +644,7 @@
             resultMessage.style.fontSize = '1.5rem';
             resultMessage.innerHTML = `
                 <p>${score >= 3 ? '🎉 太棒了！您对中国卫星的了解非常深入！' : '💪 继续努力，中国航天需要您的支持！'}</p>
-                <button id="learning-btn style="margin-top: 1.5rem;">学习卫星知识</button>
+                <button id="learning-btn" style="margin-top: 1.5rem;">学习卫星知识</button>
                 <button id="restart-btn" style="margin-top: 1.5rem;">重新开始</button>
             `;
             
@@ -656,7 +656,7 @@
             });
 
             document.getElementById('learning-btn').addEventListener('click', () => {
-                window.location.href = '../view/statellite.html';
+                window.location.href = '../view/satellite.html';
             });
         }
         
